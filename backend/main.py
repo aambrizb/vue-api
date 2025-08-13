@@ -1,6 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import time
+import json
+import importlib
+import os
+
 
 app = FastAPI()
 
@@ -14,7 +18,40 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"status": "ready"}
+
+@app.api_route("/echo",methods=["GET", "POST"])
+async def echo(request: Request):
+  return {
+    "method":request['method']
+  }
+
+@app.api_route("/api/{app}/{view}",methods=["GET", "POST","DELETE"])
+async def create_update(app,view,request: Request):
+
+  _fullpath = os.getcwd()
+
+  if os.path.exists(f"{_fullpath}/{app}/views.py"):
+    _module = importlib.import_module(f'{app}.views')
+    if _module:
+      _view = getattr(_module,view)
+
+      try:
+        response = _view(request)
+        return response
+      except Exception as ex:
+        return {
+          "status":404,
+          "msg":str(ex)
+        }
+
+  return {
+    "method" : request['method'],
+    "app"    : app,
+    "view"   : view
+  }
+
+
 @app.get("/api/app/navbar")
 def get_navbar():
 
