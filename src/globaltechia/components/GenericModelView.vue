@@ -2,7 +2,7 @@
   <GenericView>
     <template #header>
       <h2 class="text-center">
-        {{ $route.params.view }}
+        {{ toCapital($route.params.view) }}
       </h2>
       <h5 class="text-center text-secondary" v-if="$route.params.id">{{ $route.params.id }}</h5>
     </template>
@@ -35,6 +35,7 @@ import {ref} from "vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
 import VueForm from "@/globaltechia/components/GenericForm.vue";
 import { useRoute } from 'vue-router'
+import {toCapital} from "../utils.js";
 
 const route = useRoute()
 
@@ -42,7 +43,7 @@ const form  = ref(null);
 
 const items = {
   nombre: {
-     type        : 'input',
+     type        : 'text',
      name        : 'nombre',
      label       : 'Nombre',
      help_text   : 'Por favor ingrese su nombre completo',
@@ -50,12 +51,12 @@ const items = {
      error       : null,
      value       : null,
      disabled    : false,
-     class       : 'form-control',
+     klass       : 'form-control',
      label_class : 'col-lg-1 col-md-3 col-sm-3 col-xs-12',
      input_class : 'col-lg-11 col-md-9 col-sm-9 col-xs-12'
   },
   paterno:{
-     type        : 'input',
+     type        : 'text',
      name        : 'paterno',
      label       : 'Paterno',
      help_text   : 'Apellido Paterno',
@@ -63,12 +64,12 @@ const items = {
      error       : null,
      value       : null,
      disabled    : false,
-     class       : 'form-control',
+     klass       : 'form-control',
      label_class : 'col-lg-1 col-md-3 col-sm-3 col-xs-12',
      input_class : 'col-lg-11 col-md-9 col-sm-9 col-xs-12'
   },
   materno:{
-     type        : 'input',
+     type        : 'text',
      name        : 'materno',
      label       : 'Materno',
      help_text   : 'Apellido Materno',
@@ -76,12 +77,12 @@ const items = {
      error       : null,
      value       : null,
      disabled    : false,
-     class       : 'form-control',
+     klass       : 'form-control',
      label_class : 'col-lg-1 col-md-3 col-sm-3 col-xs-12',
      input_class : 'col-lg-11 col-md-9 col-sm-9 col-xs-12'
   },
   email:{
-     type        : 'input',
+     type        : 'text',
      name        : 'email',
      label       : 'Email',
      help_text   : 'Email',
@@ -89,7 +90,7 @@ const items = {
      error       : null,
      value       : null,
      disabled    : false,
-     class       : 'form-control',
+     klass       : 'form-control',
      label_class : 'col-lg-1 col-md-3 col-sm-3 col-xs-12',
      input_class : 'col-lg-11 col-md-9 col-sm-9 col-xs-12'
   },
@@ -102,7 +103,7 @@ const items = {
      error       : null,
      value       : null,
      disabled    : false,
-     class       : 'form-control',
+     klass       : 'form-control',
      label_class : 'col-lg-1 col-md-3 col-sm-3 col-xs-12',
      input_class : 'col-lg-11 col-md-9 col-sm-9 col-xs-12',
      choices     : [
@@ -125,7 +126,7 @@ const items = {
      error       : null,
      value       : null,
      disabled    : false,
-     class       : 'form-control',
+     klass       : 'form-control',
      label_class : 'col-lg-1 col-md-3 col-sm-3 col-xs-12',
      input_class : 'col-lg-11 col-md-9 col-sm-9 col-xs-12'
   },
@@ -138,7 +139,7 @@ const items = {
      error       : null,
      value       : null,
      disabled    : false,
-     class       : 'form-control',
+     klass       : 'form-control',
      label_class : 'col-lg-12 col-md-12 col-sm-12 col-xs-12',
      input_class : 'col-lg-12 col-md-12 col-sm-12 col-xs-12'
   }

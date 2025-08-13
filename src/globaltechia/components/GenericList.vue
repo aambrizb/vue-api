@@ -2,7 +2,7 @@
   <GenericView>
     <template #header>
       <h2 class="text-center">
-        {{ $route.params.view }}
+        {{ toCapital($route.params.view) }}
       </h2>
     </template>
     <template #top_button>
@@ -21,8 +21,8 @@
 <script setup>
 
 import Tabla from "@/globaltechia/components/Tabla.vue";
-import VueForm from "@/globaltechia/components/GenericForm.vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
+import {toCapital} from "@/globaltechia/utils.js";
 
 const props = defineProps(['app','view']);
 

@@ -5,7 +5,7 @@
       {{ item.label }}
     </div>
     <div :class="item.input_class">
-      <div class="row" v-if="item.type == 'input' || item.type == 'password' || item.type == 'date' || item.type == 'datetime' ">
+      <div class="row" v-if="item.type == 'text' || item.type == 'password' || item.type == 'date' || item.type == 'datetime' ">
         <input :type="item.type" :class="getInputClass(item)" v-model="item.value" :disabled="item.disabled"/>
       </div>
       <div class="row" v-if="item.type == 'select'">
@@ -36,7 +36,7 @@
 
   const props = defineProps(['item'])
   const getInputClass = ((item) => {
-    let _tmp_class = item?.class;
+    let _tmp_class = item?.klass;
 
     if (item?.error) {
       _tmp_class += " border-danger";
