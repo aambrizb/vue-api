@@ -54,7 +54,7 @@ async def get_view(app,view,request: Request):
               "status": 404,
               "msg": str(ex)
             }
-
+    else:
       try:
         response = _view(request)
         return response

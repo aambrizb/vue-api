@@ -30,7 +30,7 @@ const items  = ref([]);
 
 onMounted(() => {
   loading.value = true;
-  HttpRequest("GET","app","navbar")
+  HttpRequest("GET","base","navbar")
     .then((json_data) => json_data.json())
     .then((data) => {
 
