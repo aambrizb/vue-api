@@ -10,6 +10,5 @@ const local_routes = [
 ];
 
 const router = getRouter(local_routes);
-console.log(router);
 
 export default router
