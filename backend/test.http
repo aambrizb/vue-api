@@ -1,5 +1,13 @@
-GET http://localhost:8000/api/base/create
+POST http://localhost:8000/api/base/User
 Content-Type: application/json
 Authorization: Bearer asdasd
-App: app
-Model: persona
+
+{
+  "first_name": "alex",
+  "last_name": "torres",
+  "middle_name": "bedolla",
+  "email": "aambrizb@gmail.com"
+}
+
+###
+GET http://localhost:8000/users

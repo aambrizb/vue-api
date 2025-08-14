@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from tortoise.contrib.fastapi import register_tortoise
+from base.models import User
 import time
 import json
 import importlib
@@ -20,21 +22,38 @@ app.add_middleware(
 def read_root():
     return {"status": "ready"}
 
-@app.api_route("/echo",methods=["GET", "POST"])
-async def echo(request: Request):
-  return {
-    "method":request['method']
-  }
-
 @app.api_route("/api/{app}/{view}",methods=["GET", "POST","DELETE"])
-async def create_update(app,view,request: Request):
+async def get_view(app,view,request: Request):
 
   _fullpath = os.getcwd()
+  _module   = None
+  _view     = None
 
   if os.path.exists(f"{_fullpath}/{app}/views.py"):
     _module = importlib.import_module(f'{app}.views')
-    if _module:
+    if _module and hasattr(_module,view):
       _view = getattr(_module,view)
+
+    # Verify, if exists model.
+    if not _module or not _view:
+      _module = importlib.import_module(f'{app}.models')
+      if _module and hasattr(_module,view):
+        _model = getattr(_module,view)
+
+        if _model:
+          payload = await request.json()
+          try:
+            obj = await _model.create(**payload)
+            return {
+              "status":200,
+              "id":obj.id,
+              "msg":"Successfull Operation"
+            }
+          except Exception as ex:
+            return {
+              "status": 404,
+              "msg": str(ex)
+            }
 
       try:
         response = _view(request)
@@ -51,51 +70,10 @@ async def create_update(app,view,request: Request):
     "view"   : view
   }
 
-
-@app.get("/api/app/navbar")
-def get_navbar():
-
-  data = [
-    {
-      "name"       : "Administración",
-      "icon_class" : "fa fa-cog"
-    },
-    {
-      "name"       : "Ordenes",
-      "to"         : "create",
-      "app"        : "app",
-      "view"       : "orden",
-      "icon_class" : "fa fa-times"
-    },
-    {
-      "name"       : "Almacen",
-      "icon_class" : "fa fa-cog"
-    },
-    {
-      "name"       : "Productos",
-      "to"         : "create",
-      "app"        : "app",
-      "view"       : "producto",
-      "icon_class" : "fa fa-slash"
-    },
-    {
-      "name"       : "Personalizada",
-      "to"         : "create",
-      "app"        : "app",
-      "view"       : "personalizada",
-      "icon_class" : "fa fa-slash"
-    },
-    {
-      "name"       : "Reportes",
-      "icon_class" : "fa fa-list"
-    },
-    {
-      "name"       : "Activaciones",
-      "to"         : "reporte_activaciones",
-      "app"        : "app",
-      "view"       : "personalizada",
-      "icon_class" : "fa fa-file"
-    }]
-
-  return data
-
+register_tortoise(
+    app,
+    db_url="sqlite://db.sqlite3",  # Can be postgres, mysql, etc.
+    modules={"models": ["base.models"]},
+    generate_schemas=True,  # Auto-create tables
+    add_exception_handlers=True,
+)
