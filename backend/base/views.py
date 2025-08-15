@@ -1,4 +1,4 @@
-def navbar(request):
+def navbar(request,id=None):
 
   data = [
     {
@@ -44,10 +44,5 @@ def navbar(request):
 
   return data
 
-def create(request):
-  if request['method'] == 'GET':
-    pass
-  elif request['method'] == 'POST':
-    data = request.json()
-
-  return {"ok":"holis"}
+def jaja_list(request,id=None):
+  return {"orale":"orale que loco"}
