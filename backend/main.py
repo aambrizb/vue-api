@@ -40,7 +40,7 @@ async def get_view(app,view,request: Request):
       if _module and hasattr(_module,view):
         _model = getattr(_module,view)
 
-        if _model:
+        if _model and request.method == 'POST':
           payload = await request.json()
           try:
             obj = await _model.create(**payload)
@@ -54,9 +54,14 @@ async def get_view(app,view,request: Request):
               "status": 404,
               "msg": str(ex)
             }
+        else:
+          return {
+            "form"     : _model.schema(),
+            "messages" : []
+          }
     else:
       try:
-        response = _view(request)
+        response = await _view(request)
         return response
       except Exception as ex:
         return {

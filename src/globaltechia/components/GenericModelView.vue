@@ -31,15 +31,32 @@
 
 <script setup>
 
-import {ref} from "vue";
+import {watch, ref, onMounted} from "vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
 import VueForm from "@/globaltechia/components/GenericForm.vue";
 import { useRoute } from 'vue-router'
-import {toCapital} from "../utils.js";
+import {HttpRequest, toCapital} from "../utils.js";
 
 const route = useRoute()
 
 const form  = ref(null);
+
+onMounted(() => {
+  loadForm();
+});
+
+watch(
+  () => route.params.view,
+  (newVal, oldVal) => {
+    loadForm();
+});
+
+const loadForm = () => {
+  HttpRequest("GET",route.params.app,route.params.view)
+    .then((data) => {
+      items.value = data;
+  });
+};
 
 const items = {
   nombre: {
