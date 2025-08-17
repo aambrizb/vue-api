@@ -49,7 +49,7 @@
   const search = () => {
     messages.value = [{type:'success',msg:'Reporte generado con éxito'}];
 
-    let req = HttpRequest('POST','app','view');
+    let req = HttpRequest('POST','app/view');
     req.then((data) => {
      console.log(data);
     });

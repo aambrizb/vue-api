@@ -3,10 +3,10 @@
     <div class="card">
       <div class="card-header">
         <div class="row">
-          <div class="col-11">
+          <div class="col-lg-11 col-md-10 col-sm-11 col-xs-12">
             <slot name="header" />
           </div>
-          <div class="col-1 align-middle">
+          <div class="col-lg-1 col-md-2 col-sm-1 col-xs-12 align-middle">
             <slot name="top_button" />
           </div>
         </div>

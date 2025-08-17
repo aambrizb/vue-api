@@ -133,8 +133,8 @@ function getRouter(local_routes) {
 
 }
 
-async function HttpRequest(method,app,view,payload) {
-  const url = window['END_POINT']+"/"+app+"/"+view;
+async function HttpRequest(method,uri,payload) {
+  const url = window['END_POINT']+"/"+uri
   let body = null;
 
   if (payload !== undefined) {

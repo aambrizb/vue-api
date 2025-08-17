@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from tortoise.contrib.fastapi import register_tortoise
 from base.models import User
+from base.models import FrameField
 import time
 import json
 import importlib
@@ -56,7 +57,7 @@ async def get_view(app,view,request: Request):
             }
         else:
           return {
-            "form"     : _model.schema(),
+            "form"     : _model.schema(obj=None),
             "messages" : []
           }
     else:
@@ -78,9 +79,12 @@ async def get_view(app,view,request: Request):
 
 @app.api_route("/api/{app}/{view}/list",methods=["GET"])
 async def get_list(app,view,request: Request):
+
+  _search   = request.query_params.get("search")
   _fullpath = os.getcwd()
-  _module = None
-  _view = None
+  _module   = None
+  _view     = None
+  _props    = {}
 
   if os.path.exists(f"{_fullpath}/{app}/views.py"):
     _module = importlib.import_module(f'{app}.views')
@@ -95,8 +99,58 @@ async def get_list(app,view,request: Request):
         _model = getattr(_module, view)
 
         if _model:
-          data = await _model.all().values()
-          return data
+
+          if hasattr(_model,'Admin'):
+
+            if hasattr(_model.Admin,'search_field') and len(_model.Admin.search_field) > 0:
+              _props['search'] = True
+            if hasattr(_model.Admin,'list_per_page'):
+              _props["pagination"] = {
+                "list_per_page" : getattr(_model.Admin,'list_per_page'),
+                "total"         : 100,
+                "pages"         : 5
+              }
+
+          kw_search = {}
+          if _search and hasattr(_model,'Admin') \
+            and hasattr(_model.Admin,'search_field') \
+            and len(_model.Admin.search_field) > 0:
+            for x in _model.Admin.search_field:
+              kw_search[f"{x}__icontains"] = _search
+
+          data         = await _model.filter(**kw_search).order_by('-id').values()
+
+          _base_headers      = _model._meta.fields_map
+          _final_headers     = {}
+          _headers           = []
+
+          if hasattr(_model,'Admin'):
+            if type(_model.Admin.list_display) == list and len(_model.Admin.list_display) > 0:
+
+              for y in _model.Admin.list_display:
+                _final_headers[y] = _base_headers[y]
+          else:
+            _final_headers = _base_headers
+
+          _tmp = {}
+
+          for x in _final_headers:
+            print(x)
+            if isinstance(_final_headers[x], FrameField) or x == 'id':
+              _label = _final_headers[x].label if _final_headers[x].label else x
+              _tmp = {
+                'name'  : x,
+                'label' : _label
+              }
+
+              _headers.append(_tmp)
+
+          return {
+            "props"   : _props,
+            "headers" : _headers,
+            "data"    : data
+          }
+
       else:
         return {
           'code':404,
@@ -169,7 +223,7 @@ async def edit_view(app,view,id,request: Request):
       if _module and hasattr(_module,view):
         _model = getattr(_module,view)
 
-        if _model:
+        if _model and request.method == 'POST':
           payload = await request.json()
           try:
             await _model.filter(id=id).update(**payload)
@@ -183,6 +237,12 @@ async def edit_view(app,view,id,request: Request):
               "status": 404,
               "msg": str(ex)
             }
+        else:
+          _tmp = await _model.filter(id=id).last()
+          return {
+            "form"     : _model.schema(obj=_tmp),
+            "messages" : []
+          }
     else:
       try:
         response = _view(request,id)

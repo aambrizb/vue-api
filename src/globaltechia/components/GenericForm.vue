@@ -27,7 +27,14 @@
   let final_data = {};
   Object.keys(props.items).forEach((key) => {
     let item = props.items[key];
-    final_data[item.name] = item.value;
+
+    if (item.type !== 'checkbox') {
+      final_data[item.name] = item.value;
+    }
+    else {
+      final_data[item.name] = item.value ? item.value:false;
+    }
+
   });
 
   return final_data;

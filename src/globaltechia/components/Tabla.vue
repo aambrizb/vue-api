@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div class="row m-1">
+    <div class="row m-1" v-if="searchbar">
       <div class="col-10">
-        <input type="text" class="form-control" placeholder="Buscar.." />
+        <input ref="inputSearch" type="text" class="form-control" placeholder="Buscar.." v-model="searchtext" v-on:keyup.enter="btnSearch()"/>
       </div>
       <div class="col-1">
-        <button class="btn btn-sm btn-secondary">
+        <button class="btn btn-sm btn-secondary" @click="btnSearch()">
           <span class="fa fa-search"></span>
           Buscar
         </button>
       </div>
       <div class="col-1">
-        <button class="btn btn-sm btn-secondary -pull-right">
+        <button class="btn btn-sm btn-secondary -pull-right" hidden>
           <span class="fa fa-download"></span>
         </button>
       </div>
@@ -19,26 +19,23 @@
     <table class="table table-bordered table-hover table-striped table-sm">
       <thead>
         <tr>
-          <th style="width:75px;">
-            <input type="checkbox" /> Todo
+          <th style="width:75px;" v-if="props.selectable == true || props.selectable == 'true'">
+            <input type="checkbox" @click="selectAll()" v-model="todo" /> Todo
           </th>
-          <th class="th-">Id</th>
-          <th class="th-">Nombre</th>
-          <th class="th-">Paterno</th>
-          <th class="th-">Materno</th>
-          <th class="th-">Email</th>
+          <th v-for="x in items.headers" :class="'th-'+x">{{ x.label }}</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items">
-          <td>
-            <input type="checkbox" />
+        <tr v-for="x in items.data">
+          <td class="text-center" v-if="props.selectable == true || props.selectable == 'true'">
+            <input type="checkbox" v-model="x.selected"/>
           </td>
-          <td>1</td>
-          <td>JESUSNombre</td>
-          <td>Paterno</td>
-          <td>Materno</td>
-          <td>Email</td>
+          <td :class="'td-'+y.name" v-for="y in items.headers">
+            <router-link  v-if="y.name === 'id'" :to="{ name: 'edit', params: { 'app':$route.params.app,'view': $route.params.view,'id': x[y.name] }}">
+              {{ x[y.name] }}
+            </router-link>
+            <span v-if="y.name !== 'id'">{{ x[y.name] }}</span>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -69,11 +66,72 @@
 </template>
 
 <script setup>
- import {ref} from "vue";
+ import {onMounted, ref} from "vue";
+ import {HttpRequest} from "@/globaltechia/utils.js";
+ import {useRoute, useRouter} from "vue-router";
 
- const items = ref([{},{},{}]);
+ const props       = defineProps(['app','view','selectable','query_params']);
+ const items       = ref({});
+ const route       = useRoute()
+ const router      = useRouter()
+ const todo        = ref(false);
+ const searchtext  = ref(null);
+ const searchbar   = ref(false);
+ const inputSearch = ref(null);
+
+ onMounted(() => {
+   search();
+
+   let searchParams = new URLSearchParams(props.query_params);
+   let queryParamsObject = Object.fromEntries(searchParams);
+   searchtext.value = queryParamsObject.search;
+
+
+ });
+
+ const selectAll = () => {
+
+   items.value.data.forEach((x) => {
+     x.selected = !todo.value;
+   });
+
+ }
+
+ const btnSearch = () => {
+
+   let tmp = router.resolve({
+    name: 'list',
+    params: {
+      app  : route.params.app,
+      view : route.params.view
+    },
+  });
+
+   window.location.href = tmp.fullPath+"?search="+searchtext.value;
+
+ }
+
+ const search = () => {
+  HttpRequest("GET",route.params.app+"/"+route.params.view+"/list"+props.query_params)
+        .then((data_json) => data_json.json())
+        .then((data) => {
+          items.value = data;
+
+          if (data.props.search !== undefined) {
+            searchbar.value = true;
+          }
+
+        });
+ }
 </script>
 
 <style scoped>
+.td-id,.th-id {
+  width:45px;
+  text-align: center;
+}
 
+.table {
+  font-size:13px;
+}
 </style>

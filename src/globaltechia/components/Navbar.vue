@@ -1,9 +1,9 @@
 <template>
   <div class="text-center" v-if="loading">
-      <div class="spinner-border text-white" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
+    <div class="spinner-border text-white" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
+  </div>
   <ul class="nav flex-column">
     <li class="nav-item" v-for="item in items">
       <div v-if="!item.to" class="sidebar-heading">
@@ -33,7 +33,7 @@ const items  = ref([]);
 
 onMounted(() => {
   loading.value = true;
-  HttpRequest("GET","base","navbar")
+  HttpRequest("GET","base/navbar")
     .then((json_data) => json_data.json())
     .then((data) => {
 
