@@ -1,5 +1,29 @@
 from tortoise.models import Model
 from tortoise import fields
+import math
+
+class Pagination:
+  data          = None
+  list_per_page = 100
+  total_pages   = 0
+  actual_page   = 0
+
+  def __init__(self,data,list_per_page=100,page=1):
+
+    self.data          = data
+    self.list_per_page = list_per_page
+    self.actual_page   = page
+
+    if len(data) > 0:
+      self.total_pages   = int(math.ceil(len(data) / self.list_per_page))
+
+  def to_json(self):
+    return {
+      'data'          : self.data,
+      'list_per_page' : self.list_per_page,
+      'actual_page'   : self.actual_page,
+      'total_pages'   : self.total_pages
+    }
 
 class FrameField:
   name         = None

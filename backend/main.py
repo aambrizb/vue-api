@@ -1,8 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from tortoise.contrib.fastapi import register_tortoise
-from base.models import User
-from base.models import FrameField
+from base.models import FrameField, User, Pagination
 import time
 import json
 import importlib
@@ -100,17 +99,6 @@ async def get_list(app,view,request: Request):
 
         if _model:
 
-          if hasattr(_model,'Admin'):
-
-            if hasattr(_model.Admin,'search_field') and len(_model.Admin.search_field) > 0:
-              _props['search'] = True
-            if hasattr(_model.Admin,'list_per_page'):
-              _props["pagination"] = {
-                "list_per_page" : getattr(_model.Admin,'list_per_page'),
-                "total"         : 100,
-                "pages"         : 5
-              }
-
           kw_search = {}
           if _search and hasattr(_model,'Admin') \
             and hasattr(_model.Admin,'search_field') \
@@ -119,6 +107,16 @@ async def get_list(app,view,request: Request):
               kw_search[f"{x}__icontains"] = _search
 
           data         = await _model.filter(**kw_search).order_by('-id').values()
+
+          if hasattr(_model,'Admin'):
+
+            if hasattr(_model.Admin,'search_field') and len(_model.Admin.search_field) > 0:
+              _props['search'] = True
+            if hasattr(_model.Admin,'list_per_page') and getattr(_model.Admin,'list_per_page') > 0:
+
+              list_per_page = getattr(_model.Admin,'list_per_page')
+
+              _props["pagination"] = Pagination(data,list_per_page).to_json()
 
           _base_headers      = _model._meta.fields_map
           _final_headers     = {}
