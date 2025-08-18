@@ -6,24 +6,32 @@ class Pagination:
   data          = None
   list_per_page = 100
   total_pages   = 0
-  actual_page   = 0
+  current_page  = 0
 
   def __init__(self,data,list_per_page=100,page=1):
 
     self.data          = data
     self.list_per_page = list_per_page
-    self.actual_page   = page
+    self.current_page  = page
 
     if len(data) > 0:
       self.total_pages   = int(math.ceil(len(data) / self.list_per_page))
 
-  def to_json(self):
+  def getProps(self):
     return {
-      'data'          : self.data,
       'list_per_page' : self.list_per_page,
-      'actual_page'   : self.actual_page,
+      'current_page'  : self.current_page,
       'total_pages'   : self.total_pages
     }
+
+  def getData(self):
+
+    _start = (int(self.current_page)-1)*int(self.list_per_page)
+    _end   = _start+int(self.list_per_page)
+
+    _final_data = self.data[_start:_end]
+
+    return _final_data
 
 class FrameField:
   name         = None
@@ -200,7 +208,8 @@ class User(FrameModel):
 
   class Admin:
     list_display  = ['id','first_name','last_name','middle_name','email']
-    list_per_page = 20
+    list_per_page = 2
+    #search_field = ['first_name']
 
   def __str__(self):
     return self.email

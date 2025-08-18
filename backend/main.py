@@ -80,6 +80,8 @@ async def get_view(app,view,request: Request):
 async def get_list(app,view,request: Request):
 
   _search   = request.query_params.get("search")
+  _page     = request.query_params.get("page")
+
   _fullpath = os.getcwd()
   _module   = None
   _view     = None
@@ -116,7 +118,9 @@ async def get_list(app,view,request: Request):
 
               list_per_page = getattr(_model.Admin,'list_per_page')
 
-              _props["pagination"] = Pagination(data,list_per_page).to_json()
+              _pagination          = Pagination(data,list_per_page,_page)
+              _props["pagination"] = _pagination.getProps()
+              data                 = _pagination.getData()
 
           _base_headers      = _model._meta.fields_map
           _final_headers     = {}
