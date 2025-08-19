@@ -12,3 +12,8 @@ async def navbar(request,id=None):
 
 def jaja_list(request,id=None):
   return {"orale":"orale que loco"}
+
+async def calando(request):
+  return {
+    'ready':True
+  }

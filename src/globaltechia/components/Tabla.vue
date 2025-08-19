@@ -39,7 +39,7 @@
         </tr>
       </tbody>
     </table>
-    <div class="row">
+    <div class="row" v-if="config && config.pagination">
       <div class="col-2"></div>
       <div class="col-8">
         <ul class="pagination" style="width:300px;margin:0px auto;">
@@ -153,7 +153,7 @@
             searchbar.value = true;
           }
 
-          if (data.props.pagination.total_pages !== undefined) {
+          if (data.props && data.props.pagination && data.props.pagination.total_pages !== undefined) {
             total_pages.value = data.props.pagination.total_pages;
           }
 

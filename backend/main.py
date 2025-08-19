@@ -22,6 +22,32 @@ app.add_middleware(
 def read_root():
     return {"status": "ready"}
 
+@app.api_route("/api/method/{app}/{method}",methods=["GET", "POST"])
+async def get_method(app,method,request: Request):
+
+  _fullpath = os.getcwd()
+  _module   = None
+  _view     = None
+
+  if os.path.exists(f"{_fullpath}/{app}/views.py"):
+    _module = importlib.import_module(f'{app}.views')
+    if _module and hasattr(_module,method):
+      _view = getattr(_module,method)
+
+    try:
+      response = await _view(request)
+      return response
+    except Exception as ex:
+      return {
+        "status" : 404,
+        "msg"    : str(ex)
+      }
+
+  return {
+    "method" : request['method'],
+    "app"    : app,
+    "method" : method
+  }
 @app.api_route("/api/{app}/{view}",methods=["GET", "POST"])
 async def get_view(app,view,request: Request):
 
@@ -31,8 +57,8 @@ async def get_view(app,view,request: Request):
 
   if os.path.exists(f"{_fullpath}/{app}/views.py"):
     _module = importlib.import_module(f'{app}.views')
-    if _module and hasattr(_module,view):
-      _view = getattr(_module,view)
+    if _module and hasattr(_module,f"{view}_view"):
+      _view = getattr(_module,f"{view}_view")
 
     # Verify, if exists model.
     if not _module or not _view:
@@ -68,7 +94,6 @@ async def get_view(app,view,request: Request):
           "status":404,
           "msg":str(ex)
         }
-
 
   return {
     "method" : request['method'],
@@ -261,7 +286,6 @@ async def edit_view(app,view,id,request: Request):
     "app"    : app,
     "view"   : view
   }
-
 
 register_tortoise(
     app,

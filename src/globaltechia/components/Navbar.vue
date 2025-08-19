@@ -16,9 +16,6 @@
           <span>{{ x.name }}</span>
         </router-link>
       </div>
-
-
-
     </li>
   </ul>
 </template>
@@ -29,15 +26,15 @@ import {onMounted, ref} from "vue";
 import {HttpRequest} from "@/globaltechia/utils.js";
 
 const loading = ref(true);
-const items  = ref([]);
+const items   = ref([]);
 
 onMounted(() => {
   loading.value = true;
-  HttpRequest("GET","base/navbar")
+  HttpRequest("GET","method/base/navbar")
     .then((json_data) => json_data.json())
     .then((data) => {
 
-    items.value = data;
+    items.value   = data;
     loading.value = false;
   });
 
