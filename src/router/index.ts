@@ -1,5 +1,7 @@
 import {getRouter} from "@/globaltechia/utils.js";
 import ActivationsReport from "@/views/ActivationsReport.vue";
+import LocalLoginView from "@/views/LocalLoginView.vue";
+import LocalDashboarView from "@/views/LocalDashboarView.vue";
 
 const local_routes = [
   {
@@ -9,6 +11,6 @@ const local_routes = [
   }
 ];
 
-const router = getRouter(local_routes);
+const router = getRouter(local_routes,LocalLoginView,LocalDashboarView);
 
 export default router

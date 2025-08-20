@@ -1,4 +1,6 @@
 from base.models import Navbar
+import json
+
 async def navbar(request,id=None):
 
   data = await Navbar.filter(parent_id=None).values()
@@ -10,10 +12,33 @@ async def navbar(request,id=None):
 
   return data
 
-def jaja_list(request,id=None):
-  return {"orale":"orale que loco"}
+async def login(request):
+  from base.models import User
 
-async def calando(request):
+  code     = 404
+  msg      = ""
+  token    = None
+  fullname = None
+
+  data = await request.json()
+
+  _username = data['username']
+  _passwd   = data['password']
+
+  obj = await User.filter(email=_username).last()
+
+  if not obj:
+    code = 404
+    msg  = "Usuario no válido."
+  else:
+    code     = 200
+    msg      = "Operación realizada con éxito"
+    token    = "token"
+    fullname = f"{obj.first_name} {obj.last_name} {obj.middle_name}"
+
   return {
-    'ready':True
+    "status"   : code,
+    "msg"      : msg,
+    "token"    : token,
+    "fullname" : fullname
   }

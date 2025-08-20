@@ -3,6 +3,7 @@ import LoginView from "@/globaltechia/views/LoginView.vue";
 import SystemView from "@/globaltechia/views/SystemView.vue";
 import GenericModelView from "@/globaltechia/components/GenericModelView.vue";
 import GenericList from "@/globaltechia/components/GenericList.vue";
+import DashboardView from "@/globaltechia/views/DashboardView.vue";
 
 function toCapital(item) {
   let words = item.replace("_"," ");
@@ -72,23 +73,36 @@ function isAuthenticated() {
   return !!localStorage.getItem('token')
 }
 
-function getRouter(local_routes) {
+function getRouter(local_routes,_loginView,_dashboardView) {
+
+  if (_loginView === undefined) {
+    _loginView = LoginView
+  }
+
+  if (_dashboardView === undefined) {
+    _dashboardView = DashboardView
+  }
 
   let view_routes = [
     {
-      path: ':app/:view',
-      name: 'create',
-      component: GenericModelView,
+      path      : '',
+      name      : 'dashboard',
+      component : _dashboardView,
     },
     {
-      path: ':app/:view/:id',
-      name: 'edit',
-      component: GenericModelView,
+      path      : ':app/:view',
+      name      : 'create',
+      component : GenericModelView,
     },
     {
-      path: ':app/:view/list',
-      name: 'list',
-      component: GenericList,
+      path      : ':app/:view/:id',
+      name      : 'edit',
+      component : GenericModelView,
+    },
+    {
+      path      : ':app/:view/list',
+      name      : 'list',
+      component : GenericList,
     }
   ];
 
@@ -106,7 +120,7 @@ function getRouter(local_routes) {
     {
       path: '/login',
       name: 'login',
-      component: LoginView,
+      component: _loginView,
     },
     {
       path: '/view',

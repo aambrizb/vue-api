@@ -8,7 +8,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
           <!-- Sidebar - Brand -->
-          <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+          <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/view">
             <div class="sidebar-brand-text mx-3">
               aambrizb
             </div>
@@ -83,7 +83,7 @@
                      data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
                                         <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                                           <span class="fa fa-user"></span>
-                                        JESUS ALEJANDRO AMBRIZ BEDOLLA
+                                          {{ name }}
                                         </span>
                   </a>
                   <!-- Dropdown - User Information -->
@@ -136,7 +136,13 @@
 import { useRouter } from 'vue-router'
 import Navbar from "@/globaltechia/components/Navbar.vue";
 import SbAdmin2 from "@/globaltechia/theme/sb-admin-2/SbAdmin2.vue";
+import {onMounted, ref} from "vue";
 const router = useRouter()
+const name = ref(null);
+
+onMounted(() => {
+  name.value= localStorage.getItem('name')
+});
 const logout = () => {
   localStorage.removeItem('token');
   router.push('/login')

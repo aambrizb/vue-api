@@ -204,6 +204,7 @@ class User(FrameModel):
   password    = CharField(max_length=220)
   token       = CharField(max_length=220,null=True,show=False)
   last_login  = DatetimeField(show=False,null=True)
+  superuser = BooleanField(default=False,label='Super-Usuario')
   active      = BooleanField(default=True,label="Activo")
 
   class Admin:
