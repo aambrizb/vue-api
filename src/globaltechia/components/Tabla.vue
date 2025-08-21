@@ -68,7 +68,7 @@
 
 <script setup>
  import {onMounted, ref} from "vue";
- import {HttpRequest} from "@/globaltechia/utils.js";
+ import {HttpRequest} from "@/globaltechia/utils.ts";
  import {useRoute, useRouter} from "vue-router";
 
  const props        = defineProps(['app','view','selectable','query_params']);

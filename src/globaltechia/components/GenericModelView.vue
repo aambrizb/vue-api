@@ -40,7 +40,7 @@ import {watch, ref, onMounted} from "vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
 import VueForm from "@/globaltechia/components/GenericForm.vue";
 import {useRoute, useRouter} from 'vue-router'
-import {HttpRequest, toCapital} from "../utils.js";
+import {HttpRequest, toCapital} from "../utils.ts";
 
 const route   = useRoute();
 const router  = useRouter()

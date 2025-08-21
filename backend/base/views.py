@@ -1,7 +1,7 @@
 from base.models import Navbar
 import json
 
-async def navbar(request,id=None):
+async def navbar(request):
 
   data = await Navbar.filter(parent_id=None).values()
 
@@ -41,4 +41,29 @@ async def login(request):
     "msg"      : msg,
     "token"    : token,
     "fullname" : fullname
+  }
+
+async def ApiToken_view(request,pk=None):
+  from base.models import ApiToken
+  import uuid
+
+  _form = None
+  obj   = None
+
+  if pk:
+    obj = await ApiToken.filter(id=pk).last()
+
+  if request.method == 'GET':
+    _form = await ApiToken.schema(obj=obj)
+  elif request.method == 'POST':
+    data = await request.json()
+    data['token'] = str(uuid.uuid4())
+    try:
+      obj = await ApiToken.create(**data)
+    except Exception as ex:
+      print(ex)
+
+  return {
+    "form" : _form,
+    "obj"  : obj
   }

@@ -28,7 +28,7 @@
   import {
     TextField,
     DateField, HttpRequest,
-  } from "@/globaltechia/utils.js";
+  } from "@/globaltechia/utils.ts";
   import SystemView from "@/globaltechia/views/SystemView.vue";
 
   const messages = ref([]);

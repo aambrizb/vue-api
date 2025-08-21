@@ -1,12 +1,9 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from tortoise.contrib.fastapi import register_tortoise
-from base.models import FrameField, User, Pagination
-import time
-import json
+import utils
 import importlib
 import os
-
 
 app = FastAPI()
 
@@ -81,8 +78,10 @@ async def get_view(app,view,request: Request):
               "msg": str(ex)
             }
         else:
+          _schema = await _model.schema(obj=None)
+
           return {
-            "form"     : _model.schema(obj=None),
+            "form"     : _schema,
             "messages" : []
           }
     else:
@@ -143,7 +142,7 @@ async def get_list(app,view,request: Request):
 
               list_per_page = getattr(_model.Admin,'list_per_page')
 
-              _pagination          = Pagination(data,list_per_page,_page)
+              _pagination          = utils.Pagination(data,list_per_page,_page)
               _props["pagination"] = _pagination.getProps()
               data                 = _pagination.getData()
 
@@ -162,8 +161,7 @@ async def get_list(app,view,request: Request):
           _tmp = {}
 
           for x in _final_headers:
-            print(x)
-            if isinstance(_final_headers[x], FrameField) or x == 'id':
+            if isinstance(_final_headers[x], utils.FrameField):
               _label = _final_headers[x].label if _final_headers[x].label else x
               _tmp = {
                 'name'  : x,
@@ -241,8 +239,8 @@ async def edit_view(app,view,id,request: Request):
 
   if os.path.exists(f"{_fullpath}/{app}/views.py"):
     _module = importlib.import_module(f'{app}.views')
-    if _module and hasattr(_module,view):
-      _view = getattr(_module,view)
+    if _module and hasattr(_module,f"{view}_view"):
+      _view = getattr(_module,f"{view}_view")
 
     # Verify, if exists model.
     if not _module or not _view:
@@ -266,13 +264,15 @@ async def edit_view(app,view,id,request: Request):
             }
         else:
           _tmp = await _model.filter(id=id).last()
+
           return {
-            "form"     : _model.schema(obj=_tmp),
+            "form"     : await _model.schema(obj=_tmp),
             "messages" : []
           }
+
     else:
       try:
-        response = _view(request,id)
+        response = await _view(request,id)
         return response
       except Exception as ex:
         return {

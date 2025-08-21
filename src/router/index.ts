@@ -1,7 +1,7 @@
-import {getRouter} from "@/globaltechia/utils.js";
+import {getRouter} from "@/globaltechia/utils.ts";
 import ActivationsReport from "@/views/ActivationsReport.vue";
 import LocalLoginView from "@/views/LocalLoginView.vue";
-import LocalDashboarView from "@/views/LocalDashboarView.vue";
+import LocalDashboarView from "@/views/LocalDashboardView.vue";
 
 const local_routes = [
   {

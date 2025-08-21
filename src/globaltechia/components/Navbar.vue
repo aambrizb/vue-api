@@ -23,7 +23,7 @@
 <script setup>
 
 import {onMounted, ref} from "vue";
-import {HttpRequest} from "@/globaltechia/utils.js";
+import {HttpRequest} from "@/globaltechia/utils.ts";
 
 const loading = ref(true);
 const items   = ref([]);

@@ -5,9 +5,14 @@ import GenericModelView from "@/globaltechia/components/GenericModelView.vue";
 import GenericList from "@/globaltechia/components/GenericList.vue";
 import DashboardView from "@/globaltechia/views/DashboardView.vue";
 
-function toCapital(item) {
-  let words = item.replace("_"," ");
-  let final_words = "";
+function toCapital(item:string|undefined|null) {
+
+  let words       = ""
+    let final_words = ""
+
+    if (item !== undefined && item !== null) {
+        let words = item.replace("_"," ");
+    }
 
   let split_words = words.split(" ");
   split_words.forEach((x) => {
@@ -17,6 +22,19 @@ function toCapital(item) {
   return final_words;
 }
 class FormField {
+
+    type: string | undefined | null
+    name: string | undefined | null
+    label: string | undefined | null
+    help_text: string | undefined | null
+    required: boolean
+    error: string | undefined | null
+    value: string | undefined | null
+    disabled: boolean
+    klass: string | undefined | null
+    label_class: string | undefined | null
+    input_class: string | undefined | null
+
    constructor({
                   type = null,
                   name = null,
@@ -73,7 +91,7 @@ function isAuthenticated() {
   return !!localStorage.getItem('token')
 }
 
-function getRouter(local_routes,_loginView,_dashboardView) {
+function getRouter(local_routes:any,_loginView:any,_dashboardView:any) {
 
   if (_loginView === undefined) {
     _loginView = LoginView
@@ -147,8 +165,9 @@ function getRouter(local_routes,_loginView,_dashboardView) {
 
 }
 
-async function HttpRequest(method,uri,payload) {
-  const url = window['END_POINT']+"/"+uri
+async function HttpRequest(method:string,uri:string,payload:any) {
+  const url = window.END_POINT+"/"+uri
+
   let body = null;
 
   if (payload !== undefined) {

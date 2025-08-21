@@ -57,7 +57,7 @@
   import SbAdmin2 from "@/globaltechia/theme/sb-admin-2/SbAdmin2.vue";
   import {ref} from "vue";
   import Notification from "@/globaltechia/components/Notification.vue";
-  import {HttpRequest} from "@/globaltechia/utils.js";
+  import {HttpRequest} from "@/globaltechia/utils.ts";
 
   const router   = useRouter();
   const messages = ref([]);

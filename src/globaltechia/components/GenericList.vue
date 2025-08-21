@@ -22,7 +22,7 @@
 
 import Tabla from "@/globaltechia/components/Tabla.vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
-import {toCapital} from "@/globaltechia/utils.js";
+import {toCapital} from "@/globaltechia/utils.ts";
 
 const props = defineProps(['app','view']);
 const query_params = window.location.search;

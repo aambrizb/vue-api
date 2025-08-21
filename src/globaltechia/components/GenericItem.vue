@@ -5,15 +5,15 @@
       {{ item.label }}
     </div>
     <div :class="item.input_class">
-      <div class="row" v-if="item.type == 'text' || item.type == 'password' || item.type == 'date' || item.type == 'datetime-local' || item.type == 'checkbox'">
-        <input :type="item.type" :class="getInputClass(item)" v-model="item.value" :disabled="item.disabled"/>
+      <div v-if="item.type == 'text' || item.type == 'password' || item.type == 'date' || item.type == 'datetime-local' || item.type == 'checkbox'">
+        <input :type="item.type" :class="getInputClass(item)" v-model="item.value" :disabled="item.disabled" />
       </div>
-      <div class="row" v-if="item.type == 'select'">
+      <div v-if="item.type == 'select'">
         <select :class="getInputClass(item)" v-model="item.value" :disabled="item.disabled">
           <option v-for="x in item.choices" :value="x.value">{{ x.label }}</option>
         </select>
       </div>
-      <div class="row" v-if="item.type == 'textarea'">
+      <div v-if="item.type == 'textarea'">
         <textarea :class="getInputClass(item)" v-model="item.value" :disabled="item.disabled"></textarea>
       </div>
       <div class="row text-muted" v-if="item.help_text" style="font-size:11px;">
