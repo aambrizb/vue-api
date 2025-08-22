@@ -59,7 +59,10 @@ async def ApiToken_view(request,pk=None):
     data = await request.json()
     data['token'] = str(uuid.uuid4())
     try:
-      obj = await ApiToken.create(**data)
+      if not obj:
+        obj = await ApiToken.create(**data)
+      else:
+        await ApiToken.filter(id=pk).update(**data)
     except Exception as ex:
       print(ex)
 

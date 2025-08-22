@@ -5,8 +5,11 @@
       {{ item.label }}
     </div>
     <div :class="item.input_class">
-      <div v-if="item.type == 'text' || item.type == 'password' || item.type == 'date' || item.type == 'datetime-local' || item.type == 'checkbox'">
+      <div v-if="item.type == 'text' || item.type == 'password' || item.type == 'date' || item.type == 'datetime-local'">
         <input :type="item.type" :class="getInputClass(item)" v-model="item.value" :disabled="item.disabled" />
+      </div>
+      <div v-if="item.type == 'checkbox'">
+        <input type="checkbox" :class="getInputClass(item)" v-model="item.value" :disabled="item.disabled" :checked="item.value ? 'checked':'' "/>
       </div>
       <div v-if="item.type == 'select'">
         <select :class="getInputClass(item)" v-model="item.value" :disabled="item.disabled">

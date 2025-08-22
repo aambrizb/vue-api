@@ -34,11 +34,17 @@
             <router-link  v-if="y.name === 'id'" :to="{ name: 'edit', params: { 'app':$route.params.app,'view': $route.params.view,'id': x[y.name] }}">
               {{ x[y.name] }}
             </router-link>
-            <span v-if="y.name !== 'id'">{{ x[y.name] }}</span>
+            <span v-if="y.name !== 'id' && !y.boolean">
+              {{ x[y.name] }}
+            </span>
+            <span v-if="y.name !== 'id' && y.boolean">
+              <span class="fa" :class="x[y.name] ? 'fa-check-circle text-success':'fa-times-circle text-danger' "></span>
+            </span>
           </td>
         </tr>
       </tbody>
     </table>
+
     <div class="row" v-if="config && config.pagination">
       <div class="col-2"></div>
       <div class="col-8">

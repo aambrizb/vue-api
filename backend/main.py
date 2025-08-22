@@ -164,10 +164,10 @@ async def get_list(app,view,request: Request):
             if isinstance(_final_headers[x], utils.FrameField):
               _label = _final_headers[x].label if _final_headers[x].label else x
               _tmp = {
-                'name'  : x,
-                'label' : _label
+                'name'    : x,
+                'label'   : _label,
+                'boolean' : isinstance(_final_headers[x],utils.BooleanField)
               }
-
               _headers.append(_tmp)
 
           return {
