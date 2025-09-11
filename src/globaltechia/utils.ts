@@ -4,6 +4,8 @@ import SystemView from "@/globaltechia/views/SystemView.vue";
 import GenericModelView from "@/globaltechia/components/GenericModelView.vue";
 import GenericList from "@/globaltechia/components/GenericList.vue";
 import DashboardView from "@/globaltechia/views/DashboardView.vue";
+import UserView from "@/globaltechia/views/UserView.vue";
+import { Modal } from 'bootstrap';
 
 function toCapital(item:string|undefined|null) {
 
@@ -67,6 +69,9 @@ class FormField {
    }
 }
 
+class CharField extends FormField {
+ type = 'text'
+}
 class TextField extends FormField {
  type = 'text'
 }
@@ -121,6 +126,11 @@ function getRouter(local_routes:any,_loginView:any,_dashboardView:any) {
       path      : ':app/:view/list',
       name      : 'list',
       component : GenericList,
+    },
+    {
+      path      : ':app/User',
+      name      : 'user',
+      component : UserView,
     }
   ];
 
@@ -185,14 +195,31 @@ async function HttpRequest(method:string,uri:string,payload:any) {
 
 }
 
+function openModal(last_component:any,component:any) {
+
+  last_component.value = component;
+
+  setTimeout(function() {
+    var last = document.getElementById('frame_modal');
+    if (last) {
+      var myModal = new Modal(last);
+      myModal.show();
+    }
+
+  },200);
+
+};
+
 export {
    toCapital,
    FormField,
+   CharField,
    TextField,
    TextAreaField,
    DateField,
    DateTimeField,
    SelectField,
    getRouter,
-   HttpRequest
+   HttpRequest,
+   openModal
 }

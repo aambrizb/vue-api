@@ -1,10 +1,10 @@
 <template>
-  <GenericModalView>
+  <GenericModalView custom_class="modal-lg">
     <template #modal_title>
       Holis
     </template>
     <template #modal_body>
-      juajuajuajua que onda con esto
+      SEGUNDA PRUEBA
     </template>
   </GenericModalView>
 </template>
