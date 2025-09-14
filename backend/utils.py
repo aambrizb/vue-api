@@ -29,6 +29,12 @@ class Pagination:
 
   def getData(self):
 
+    if not self.current_page:
+      self.current_page = 1
+
+    if not self.list_per_page:
+      self.list_per_page = 100
+
     _start = (int(self.current_page)-1)*int(self.list_per_page)
     _end   = _start+int(self.list_per_page)
 

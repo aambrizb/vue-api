@@ -51,11 +51,11 @@ class GroupPermission(Model):
   )
 
 class User(utils.FrameModel):
-  first_name  = utils.CharField(max_length=45,label="Nombre",help_text="Ingrese nombre completo. ej. Alejandro")
-  last_name   = utils.CharField(max_length=45,label="Apellido Paterno",help_text="Apellido Paterno ej. Ambríz")
-  middle_name = utils.CharField(max_length=45,label="Apellido Materno",help_text="Apellido Materno ej. Bedolla")
-  email       = utils.CharField(max_length=120)
-  password    = utils.CharField(max_length=220)
+  first_name  = utils.CharField(max_length=45,label="Nombre",help_text="Ingrese nombre completo. ej. Alejandro",label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
+  last_name   = utils.CharField(max_length=45,label="Apellido Paterno",help_text="Apellido Paterno ej. Ambríz",label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
+  middle_name = utils.CharField(max_length=45,label="Apellido Materno",help_text="Apellido Materno ej. Bedolla",label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
+  email       = utils.CharField(max_length=120,label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
+  password    = utils.CharField(max_length=220,show=False)
   token       = utils.CharField(max_length=220,null=True,show=False)
   last_login  = utils.DatetimeField(show=False,null=True)
   superuser   = utils.BooleanField(default=False,label='Super-Usuario')

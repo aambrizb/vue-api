@@ -49,29 +49,23 @@ const items   = ref({});
 const form    = ref(null);
 
 onMounted(() => {
-  loadForm();
+  loadForm(route.params.app,route.params.view,route.params.id);
 });
 
 watch(
   () => route.params.view,
   (newVal, oldVal) => {
-    loadForm();
+    loadForm(route.params.app,route.params.view,route.params.id);
 });
 
-const getFullURI = () => {
-  let full_uri = route.params.app+"/"+route.params.view;
-
-  if (route.params.id) {
-    full_uri += "/"+route.params.id;
-  }
-
-  return full_uri;
-};
-
-const loadForm = () => {
+const loadForm = (app,view,id) => {
   loading.value = true;
 
-  let full_uri = getFullURI();
+  let full_uri = app+"/"+view;
+
+  if (id) {
+    full_uri += "/"+id;
+  }
 
   HttpRequest("GET",full_uri)
     .then((data) => data.json())

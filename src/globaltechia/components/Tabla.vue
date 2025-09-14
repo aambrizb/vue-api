@@ -31,7 +31,7 @@
             <input type="checkbox" v-model="x.selected"/>
           </td>
           <td :class="'td-'+y.name" v-for="y in items.headers">
-            <router-link  v-if="y.name === 'id'" :to="{ name: 'edit', params: { 'app':$route.params.app,'view': $route.params.view,'id': x[y.name] }}">
+            <router-link  v-if="y.name === 'id'" :to="{ name: props.to, params: { 'app':props.app,'view': props.view,'id': x[y.name] }}">
               {{ x[y.name] }}
             </router-link>
             <span v-if="y.name !== 'id' && !y.boolean">
@@ -75,11 +75,10 @@
 <script setup>
  import {onMounted, ref} from "vue";
  import {HttpRequest} from "@/globaltechia/utils.ts";
- import {useRoute, useRouter} from "vue-router";
+ import {useRouter} from "vue-router";
 
- const props        = defineProps(['app','view','selectable','query_params']);
+ const props        = defineProps(['to','app','view','selectable','query_params']);
  const items        = ref({});
- const route        = useRoute()
  const router       = useRouter()
  const todo         = ref(false);
  const searchtext   = ref(null);
@@ -90,6 +89,7 @@
  const config       = ref(null);
 
  onMounted(() => {
+
    search();
 
    let searchParams = new URLSearchParams(props.query_params);
@@ -118,8 +118,8 @@
    let tmp = router.resolve({
     name: 'list',
     params: {
-      app  : route.params.app,
-      view : route.params.view
+      app  : props.app,
+      view : props.view
     },
   });
 
@@ -149,7 +149,7 @@
  }
 
  const search = () => {
-  HttpRequest("GET",route.params.app+"/"+route.params.view+"/list"+props.query_params)
+  HttpRequest("GET",props.app+"/"+props.view+"/list"+props.query_params)
         .then((data_json) => data_json.json())
         .then((data) => {
           items.value  = data;

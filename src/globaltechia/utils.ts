@@ -10,11 +10,11 @@ import { Modal } from 'bootstrap';
 function toCapital(item:string|undefined|null) {
 
   let words       = ""
-    let final_words = ""
+  let final_words = ""
 
-    if (item !== undefined && item !== null) {
-        let words = item.replace("_"," ");
-    }
+  if (item !== undefined && item !== null) {
+    words = item.replace("_"," ");
+  }
 
   let split_words = words.split(" ");
   split_words.forEach((x) => {
@@ -72,6 +72,10 @@ class FormField {
 class CharField extends FormField {
  type = 'text'
 }
+
+class PasswordField extends FormField {
+ type = 'password'
+}
 class TextField extends FormField {
  type = 'text'
 }
@@ -90,6 +94,11 @@ class DateTimeField extends FormField {
 
 class SelectField extends FormField {
   type = 'select'
+}
+
+class BooleanField extends FormField {
+  type = 'checkbox'
+  klass = ''
 }
 
 function isAuthenticated() {
@@ -195,6 +204,24 @@ async function HttpRequest(method:string,uri:string,payload:any) {
 
 }
 
+async function getForm(app,view,id) {
+
+  let items = {};
+  let full_uri = app+"/"+view;
+
+  if (id) {
+    full_uri += "/"+id;
+  }
+
+  const response = await HttpRequest("GET",full_uri);
+  const data     = await response.json()
+
+  if (response.status == 200) {
+    return data.form;
+  }
+
+}
+
 function openModal(last_component:any,component:any) {
 
   last_component.value = component;
@@ -214,12 +241,15 @@ export {
    toCapital,
    FormField,
    CharField,
+   PasswordField,
    TextField,
    TextAreaField,
    DateField,
    DateTimeField,
    SelectField,
+   BooleanField,
    getRouter,
    HttpRequest,
+   getForm,
    openModal
 }

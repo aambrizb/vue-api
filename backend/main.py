@@ -158,6 +158,7 @@ async def get_list(app,view,request: Request):
           else:
             _final_headers = _base_headers
 
+
           _tmp = {}
 
           for x in _final_headers:
