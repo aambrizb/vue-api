@@ -100,7 +100,7 @@
                   <thead>
                     <tr>
                       <th>Permiso</th>
-                      <th>Acciones</th>
+                      <th class="text-center">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
