@@ -202,12 +202,13 @@ async function HttpRequest(method:string,uri:string,payload:any) {
 
 }
 
-async function getModelData(app:string,model:string,values:any) {
+async function getModelData(app:string,model:string,values:any,filters:any) {
 
   let params = {
     app       : app,
     model     : model,
     values    : values,
+    filters   : filters
   };
 
   return HttpRequest('POST','method/base/getModelData',params);

@@ -155,13 +155,13 @@ onMounted(async () => {
 });
 
 const loadUserGroups = () => {
-  getModelData("base","UserGroup",["id","group__name"]).then((ev) => ev.json()).then((data) => {
+  getModelData("base","UserGroup",["id","group__name"],{"user_id":route.params.id}).then((ev) => ev.json()).then((data) => {
     data_usergroup.value = data.data;
   });
 }
 
 const loadUserPermissions = () => {
-  getModelData("base","UserPermission",["id","permission__name"]).then((ev) => ev.json()).then((data) => {
+  getModelData("base","UserPermission",["id","permission__name"],{"user_id":route.params.id}).then((ev) => ev.json()).then((data) => {
     data_userpermission.value = data.data;
   });
 }

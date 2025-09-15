@@ -130,6 +130,7 @@ async def getModelData(request):
   _app       = data.get('app', None)
   _model     = data.get('model', None)
   _values    = data.get('values', None)
+  _filters   = data.get('filters', None)
 
   _module = importlib.import_module(f'{_app}.models')
   _data   = []
@@ -138,7 +139,14 @@ async def getModelData(request):
     _model = getattr(_module, _model)
 
     try:
-      _data = await _model.all().values(*_values)
+
+      _data = _model.all()
+
+      if _filters:
+        _data = _data.filter(**_filters)
+
+      _data = await _data.values(*_values)
+
     except Exception as ex:
       print(f"[getModelData] {ex}")
 
