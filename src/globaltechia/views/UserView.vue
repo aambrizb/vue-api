@@ -1,11 +1,12 @@
 <template>
   <GenericView>
     <template #header>
+      <TitleView view="Usuario" :id="$route.params.id" />
+    </template>
+    <template #top_button>
       <ListButton to="list_user" :app="$route.params.app" view="User" />
     </template>
     <template #body>
-      <h1 class="text-center">Usuario</h1>
-      <h2 class="text-center"></h2>
       <div class="container-fluid">
         <div class="card">
           <div class="card-body">
@@ -52,8 +53,15 @@
               </div>
               <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="row">
-                  <div class="col-2">
-                    <button class="btn btn-sm btn-primary" @click="addGroup" v-if="$route.params.id">
+                  <div class="col-1">Grupo</div>
+                  <div class="col-3">
+                    <select class="form-select">
+                      <option value="--">--</option>
+                      <option value="1" v-for="item in data_permission">Hola</option>
+                    </select>
+                  </div>
+                  <div class="col-3">
+                    <button type="button" class="btn btn-primary btn-sm">
                       <span class="fa fa-plus-circle"></span>
                       Agregar
                     </button>
@@ -71,8 +79,15 @@
               </div>
               <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="row">
-                  <div class="col-2">
-                    <button class="btn btn-sm btn-primary" @click="addPermission" v-if="$route.params.id">
+                  <div class="col-1">Permiso</div>
+                  <div class="col-3">
+                    <select class="form-select">
+                      <option value="--">--</option>
+                      <option value="1">Hola</option>
+                    </select>
+                  </div>
+                  <div class="col-3">
+                    <button type="button" class="btn btn-primary btn-sm">
                       <span class="fa fa-plus-circle"></span>
                       Agregar
                     </button>
@@ -101,22 +116,46 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import { useRoute } from 'vue-router'
-import {CharField, BooleanField, openModal, PasswordField, getForm} from "@/globaltechia/utils.js";
+import {CharField, BooleanField, openModal, PasswordField, getForm, HttpRequest} from "@/globaltechia/utils.js";
 import PruebaModal from "@/modals/PruebaModal.vue";
 import PruebaModalSegundo from "@/modals/PruebaModalSegundo.vue";
 import GenericItem from "@/globaltechia/components/GenericItem.vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
 import ListButton from "@/globaltechia/components/buttons/ListButton.vue";
+import TitleView from "@/globaltechia/components/buttons/TitleView.vue";
 const items = ref({});
 const last_component = ref(null);
 
 const route = useRoute()
 
+const selected_group      = ref(null);
+const selected_permission = ref(null);
+
+const data_group      = ref([]);
+const data_permission = ref([]);
+
 onMounted(async () => {
   items.value = await getForm("base","User", route.params.id);
-  items.value['password']         = new PasswordField({required:false,name:"password",label_class:"col-4",input_class:'col-6'});
-  items.value['confirm_password'] = new PasswordField({required:false,name:"confirm_password",label_class:"col-4",input_class:'col-6'});
+  items.value['password']         = new PasswordField({required:false,name:"password",label:"Contraseña",label_class:"col-4",input_class:'col-6'});
+  items.value['confirm_password'] = new PasswordField({required:false,name:"confirm_password",label:"Contraseña (confirmar)",label_class:"col-4",input_class:'col-6'});
+
+  loadGroups();
+  loadPermission();
+
 });
+
+const loadGroups = () => {
+  HttpRequest('GET','method/base/getGroups').then((ev) => ev.json()).then((data) => {
+    data_group.value = data;
+  });
+}
+
+const loadPermission = () => {
+  HttpRequest('GET','method/base/getPermission').then((ev) => ev.json()).then((data) => {
+    data_permission.value = data;
+  });
+}
+
 const onChange = (value) => {
   if (items?.value.password.value !== items?.value.confirm_password.value) {
     items.value.confirm_password.error = "Verifique las contraseñas, deben de ser iguales.";
@@ -126,6 +165,8 @@ const onChange = (value) => {
   }
 
 }
+
+/**
 const addGroup = () => {
   openModal(last_component,PruebaModal);
 }
@@ -133,6 +174,8 @@ const addGroup = () => {
 const addPermission = () => {
   openModal(last_component,PruebaModalSegundo);
 }
+
+**/
 
 </script>
 

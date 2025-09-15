@@ -70,3 +70,35 @@ async def ApiToken_view(request,pk=None):
     "form" : _form,
     "obj"  : obj
   }
+
+async def getGroups(request):
+  from base.models import Group
+
+  code     = 200
+  msg      = "Operación realizada con éxito"
+
+  data = await Group.filter(active=True).values()
+
+  params = {
+    "code" : code,
+    "msg"  : msg,
+    "data" : data
+  }
+
+  return params
+
+async def getPermission(request):
+  from base.models import Permission
+
+  code     = 200
+  msg      = "Operación realizada con éxito"
+
+  data = await Permission.filter(active=True).values()
+
+  params = {
+    "code" : code,
+    "msg"  : msg,
+    "data" : data
+  }
+
+  return params

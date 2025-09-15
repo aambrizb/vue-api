@@ -187,24 +187,22 @@ function getRouter(local_routes:any,_loginView:any,_dashboardView:any) {
 async function HttpRequest(method:string,uri:string,payload:any) {
   const url = window.END_POINT+"/"+uri
 
-  let body = null;
-
-  if (payload !== undefined) {
-    body = JSON.stringify(payload)
-  }
-
-  return await fetch(url,{
+  let _opts: RequestInit = {
     method  : method,
     headers : {
-      'Content-Type':'application/json'
-    },
-    body    : body,
-  });
+      "Content-Type":"application/json"
+    }
+  }
 
+  if (payload !== undefined && payload !== null) {
+    _opts['body']                    = JSON.stringify(payload);
+  }
+
+  return await fetch(url,_opts);
 
 }
 
-async function getForm(app,view,id) {
+async function getForm(app:string,view:string,id:number|null) {
 
   let items = {};
   let full_uri = app+"/"+view;
@@ -213,7 +211,7 @@ async function getForm(app,view,id) {
     full_uri += "/"+id;
   }
 
-  const response = await HttpRequest("GET",full_uri);
+  const response = await HttpRequest("GET",full_uri,null);
   const data     = await response.json()
 
   if (response.status == 200) {
