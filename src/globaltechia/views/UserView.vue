@@ -33,13 +33,13 @@
             <div class="tab-content p-4" id="myTabContent">
               <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-lg-6 col-md-6 col-xs-12">
                     <GenericItem :item="items.first_name" />
                     <GenericItem :item="items.last_name" />
                     <GenericItem :item="items.middle_name" />
                     <GenericItem :item="items.email" />
                   </div>
-                  <div class="col-6">
+                  <div class="col-lg-6 col-md-6 col-xs-12">
                     <GenericItem :item="items.password" @change="onChange" />
                     <GenericItem :item="items.confirm_password" @change="onChange" />
                     <div v-if="items?.password?.value !== null && (items?.password?.value == items?.confirm_password?.value)" class="text-success text-center">
@@ -53,15 +53,12 @@
               </div>
               <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="row">
-                  <div class="col-1">Grupo</div>
-                  <div class="col-3">
-                    <select class="form-select">
-                      <option value="--">--</option>
-                      <option value="1" v-for="item in data_permission">Hola</option>
-                    </select>
+                  <div class="col-lg-1 col-md-1 col-xs-12">Grupo</div>
+                  <div class="col-lg-3 col-md-3 col-xs-12">
+                    <SelectModel v-model="selected_group" app="base" model="Group" model_key="id" label="name" />
                   </div>
-                  <div class="col-3">
-                    <button type="button" class="btn btn-primary btn-sm">
+                  <div class="col-lg-3 col-md-3 col-xs-12">
+                    <button type="button" class="btn btn-primary btn-sm" @click="addGroup">
                       <span class="fa fa-plus-circle"></span>
                       Agregar
                     </button>
@@ -71,23 +68,28 @@
                 <table class="table table-bordered table-condensed table-sm">
                   <thead>
                     <tr>
-                      <th>Grupo</th>
-                      <th>Acciones</th>
+                      <th class="col-10">Grupo</th>
+                      <th class="col-2 text-center">Acciones</th>
                     </tr>
                   </thead>
+                  <tbody>
+                    <tr v-for="item in data_usergroup">
+                      <td class="col-10">{{ item.group__name }}</td>
+                      <td class="col-2 text-center">
+                        <span class="fa fa-trash-can text-danger" style="cursor:pointer;" @click="removeGroup(item)"/>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
               <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="row">
-                  <div class="col-1">Permiso</div>
-                  <div class="col-3">
-                    <select class="form-select">
-                      <option value="--">--</option>
-                      <option value="1">Hola</option>
-                    </select>
+                  <div class="col-lg-1 col-md-1 col-xs-12">Permiso</div>
+                  <div class="col-lg-3 col-md-3 col-xs-12">
+                    <SelectModel v-model="selected_permission" app="base" model="Permission" model_key="id" label="name" />
                   </div>
-                  <div class="col-3">
-                    <button type="button" class="btn btn-primary btn-sm">
+                  <div class="col-lg-3 col-md-3 col-xs-12">
+                    <button type="button" class="btn btn-primary btn-sm" @click="addPermission">
                       <span class="fa fa-plus-circle"></span>
                       Agregar
                     </button>
@@ -101,6 +103,15 @@
                       <th>Acciones</th>
                     </tr>
                   </thead>
+                  <tbody>
+                    <tr v-for="item in data_userpermission">
+                      <td class="col-10">{{ item.permission__name }}</td>
+                      <td class="col-2 text-center">
+                        <span class="fa fa-trash-can text-danger" style="cursor:pointer;" @click="removePermission(item)"/>
+                      </td>
+                    </tr>
+                  </tbody>
+
                 </table>
               </div>
             </div>
@@ -116,13 +127,12 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import { useRoute } from 'vue-router'
-import {CharField, BooleanField, openModal, PasswordField, getForm, HttpRequest} from "@/globaltechia/utils.js";
-import PruebaModal from "@/modals/PruebaModal.vue";
-import PruebaModalSegundo from "@/modals/PruebaModalSegundo.vue";
+import {PasswordField, getForm, HttpRequest, removeModel, addModel, getModelData} from "@/globaltechia/utils.js";
 import GenericItem from "@/globaltechia/components/GenericItem.vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
 import ListButton from "@/globaltechia/components/buttons/ListButton.vue";
 import TitleView from "@/globaltechia/components/buttons/TitleView.vue";
+import SelectModel from "@/globaltechia/components/SelectModel.vue";
 const items = ref({});
 const last_component = ref(null);
 
@@ -131,28 +141,28 @@ const route = useRoute()
 const selected_group      = ref(null);
 const selected_permission = ref(null);
 
-const data_group      = ref([]);
-const data_permission = ref([]);
+const data_usergroup      = ref([]);
+const data_userpermission = ref([]);
 
 onMounted(async () => {
   items.value = await getForm("base","User", route.params.id);
-  items.value['password']         = new PasswordField({required:false,name:"password",label:"Contraseña",label_class:"col-4",input_class:'col-6'});
-  items.value['confirm_password'] = new PasswordField({required:false,name:"confirm_password",label:"Contraseña (confirmar)",label_class:"col-4",input_class:'col-6'});
+  items.value['password']         = new PasswordField({required:false,name:"password",label:"Contraseña",label_class:"col-lg-4 col-md-4 col-xs-12",input_class:'col-lg-6 col-md-6 col-xs-12'});
+  items.value['confirm_password'] = new PasswordField({required:false,name:"confirm_password",label_class:"col-lg-4 col-md-4 col-xs-12",input_class:'col-lg-6 col-md-6 col-xs-12'});
 
-  loadGroups();
-  loadPermission();
+  loadUserGroups();
+  loadUserPermissions();
 
 });
 
-const loadGroups = () => {
-  HttpRequest('GET','method/base/getGroups').then((ev) => ev.json()).then((data) => {
-    data_group.value = data;
+const loadUserGroups = () => {
+  getModelData("base","UserGroup",["id","group__name"]).then((ev) => ev.json()).then((data) => {
+    data_usergroup.value = data.data;
   });
 }
 
-const loadPermission = () => {
-  HttpRequest('GET','method/base/getPermission').then((ev) => ev.json()).then((data) => {
-    data_permission.value = data;
+const loadUserPermissions = () => {
+  getModelData("base","UserPermission",["id","permission__name"]).then((ev) => ev.json()).then((data) => {
+    data_userpermission.value = data.data;
   });
 }
 
@@ -165,6 +175,66 @@ const onChange = (value) => {
   }
 
 }
+const addGroup = () => {
+  if (confirm("¿Realmente desea agregar este elemento?")) {
+
+      let params = {
+        "user_id"  : route.params.id,
+        "group_id" : selected_group.value,
+      }
+
+      addModel("base","UserGroup",params).then((ev) => ev.json()).then((data) => {
+        if (data.code == 200) {
+          selected_group.value = null;
+          loadUserGroups();
+        }
+      });
+
+  }
+
+}
+
+const addPermission = () => {
+  if (confirm("¿Realmente desea agregar este elemento?")) {
+
+      let params = {
+        "user_id"       : route.params.id,
+        "permission_id" : selected_permission.value,
+      }
+
+      addModel("base","UserPermission",params).then((ev) => ev.json()).then((data) => {
+        if (data.code == 200) {
+          selected_permission.value = null;
+          loadUserPermissions();
+        }
+      });
+
+  }
+
+}
+const removeGroup = (item) => {
+  if (confirm("¿Realmente desea eliminar este elemento?")) {
+    removeModel("base","UserGroup",item.id).then((ev) => ev.json()).then((data) => {
+      if (data.code == 200) {
+        loadUserGroups();
+      }
+    });
+  }
+
+}
+
+const removePermission = (item) => {
+  if (confirm("¿Realmente desea eliminar este elemento?")) {
+    removeModel("base","UserPermission",item.id).then((ev) => ev.json()).then((data) => {
+      if (data.code == 200) {
+        loadUserPermissions();
+      }
+    });
+  }
+
+}
+
+
 
 /**
 const addGroup = () => {

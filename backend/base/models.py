@@ -20,8 +20,8 @@ class Navbar(utils.FrameModel):
     return self.name
 
 class Permission(utils.FrameModel):
-  name   = utils.CharField(max_length=20)
-  active = utils.BooleanField(default=True)
+  name   = utils.CharField(max_length=20,label="Nombre")
+  active = utils.BooleanField(default=True,label="Activo")
 
 class FrameAdmin:
   list_display = []

@@ -12,9 +12,9 @@
  import {onMounted} from "vue";
 
  const props = defineProps(['items']);
+ const emit  = defineEmits(["keyup","change"])
 
  onMounted(() => {
-   console.log("holis",props.items);
  });
  const is_valid = () => {
 
@@ -50,14 +50,12 @@
  };
 
   function handleKeyUp(event, index) {
-    this.$emit("keyup",index,event);
+    emit("keyup",index,event);
   }
 
   function handleChange(value, index) {
-    this.$emit("change",index,value);
+    emit("change",index,value);
   }
-
-  defineEmits(['update:item.value', 'keyup', 'change'])
 
   defineExpose({
      is_valid,

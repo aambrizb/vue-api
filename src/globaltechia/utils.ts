@@ -202,14 +202,56 @@ async function HttpRequest(method:string,uri:string,payload:any) {
 
 }
 
-async function getForm(app:string,view:string,id:number|null) {
+async function getModelData(app:string,model:string,values:any) {
 
-  let items = {};
+  let params = {
+    app       : app,
+    model     : model,
+    values    : values,
+  };
+
+  return HttpRequest('POST','method/base/getModelData',params);
+
+}
+
+async function addModel(app:string,model:string,data:any) {
+
+  let params = {
+    "app"   : app,
+    "model" : model,
+    "data"  : data
+  };
+
+  return HttpRequest('POST','method/base/addModel',params);
+
+}
+
+async function removeModel(app:string,model:string,id:number) {
+
+  let params = {
+    "app"   : app,
+    "model" : model,
+    "id"    : id
+  };
+
+  return HttpRequest('POST','method/base/removeModel',params);
+}
+
+const getFullURI = (app,view,id) => {
+
   let full_uri = app+"/"+view;
 
   if (id) {
     full_uri += "/"+id;
   }
+
+  return full_uri;
+
+};
+
+async function getForm(app:string,view:string,id:number|null) {
+
+  let full_uri = getFullURI(app,view,id);
 
   const response = await HttpRequest("GET",full_uri,null);
   const data     = await response.json()
@@ -247,7 +289,11 @@ export {
    SelectField,
    BooleanField,
    getRouter,
+   getModelData,
+   addModel,
+   removeModel,
    HttpRequest,
+   getFullURI,
    getForm,
    openModal
 }

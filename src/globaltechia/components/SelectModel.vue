@@ -1,0 +1,50 @@
+<template>
+  <select class="form-select" v-model="selected" @change="handleChange">
+    <option value="--">--</option>
+    <option
+        :value="item[props.model_key]"
+        v-for="item in options"
+    >{{ item[props.label] }}</option>
+  </select>
+</template>
+
+<script setup>
+import {onMounted, ref} from "vue";
+import {getModelData, HttpRequest} from "@/globaltechia/utils.js";
+
+  const props = defineProps(['modelValue','app','model','model_key','label']);
+
+  const selected = ref(null);
+  const options  = ref([]);
+
+  const emit = defineEmits(["update:modelValue","change"])
+
+  onMounted(() => {
+    loadData();
+  });
+
+  function handleChange(event) {
+    const value = event.target.value
+    emit("update:modelValue", value);
+    emit("change", value);
+  }
+
+  const loadData = () => {
+
+    let params = {
+      app       : props.app,
+      model     : props.model,
+      model_key : props.model_key,
+      label     : props.label
+    };
+
+    getModelData(props.app,props.model,[props.model_key,props.label]).then((ev) => ev.json()).then((data) => {
+      options.value = data.data;
+    });
+}
+
+</script>
+
+<style scoped>
+
+</style>

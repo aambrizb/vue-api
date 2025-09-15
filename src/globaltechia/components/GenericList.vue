@@ -14,7 +14,7 @@
     </template>
     <template #body>
       <slot name="body">
-        <Tabla :app="$route.params.app" :view="$route.params.view" selectable="true" :query_params="query_params" />
+        <Tabla to="edit" :app="$route.params.app" :view="$route.params.view" selectable="true" :query_params="query_params" />
       </slot>
     </template>
   </GenericView>

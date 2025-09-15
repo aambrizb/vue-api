@@ -40,7 +40,7 @@ import {watch, ref, onMounted} from "vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
 import VueForm from "@/globaltechia/components/GenericForm.vue";
 import {useRoute, useRouter} from 'vue-router'
-import {HttpRequest, toCapital} from "../utils.ts";
+import {getForm, getFullURI, HttpRequest, toCapital} from "../utils.ts";
 
 const route   = useRoute();
 const router  = useRouter()
@@ -58,27 +58,18 @@ watch(
     loadForm(route.params.app,route.params.view,route.params.id);
 });
 
-const loadForm = (app,view,id) => {
+const loadForm = () => {
   loading.value = true;
-
-  let full_uri = app+"/"+view;
-
-  if (id) {
-    full_uri += "/"+id;
-  }
-
-  HttpRequest("GET",full_uri)
-    .then((data) => data.json())
-    .then((x) => {
-      items.value = x.form;
-      loading.value = false;
+  getForm(route.params.app,route.params.view,route.params.id).then((data) => {
+    items.value = data;
+    loading.value = false;
   });
 };
 
 const save = () => {
   let is_valid = form.value?.is_valid();
   let data = form.value?.data();
-  let full_uri = getFullURI();
+  let full_uri = getFullURI(route.params.app,route.params.view,route.params.id);
 
   if (is_valid) {
 

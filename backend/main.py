@@ -250,15 +250,18 @@ async def edit_view(app,view,id,request: Request):
         _model = getattr(_module,view)
 
         if _model and request.method == 'POST':
+
           payload = await request.json()
+
           try:
-            await _model.filter(id=id).update(**payload)
+            _updated_model = await _model.filter(id=id).update(**payload)
             return {
               "status":200,
               "id":id,
               "msg":"Successfully Operation"
             }
           except Exception as ex:
+            print("[ERROR] ",ex)
             return {
               "status": 404,
               "msg": str(ex)

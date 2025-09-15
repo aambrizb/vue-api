@@ -1,5 +1,6 @@
 from base.models import Navbar
 import json
+import importlib
 
 async def navbar(request):
 
@@ -43,6 +44,54 @@ async def login(request):
     "fullname" : fullname
   }
 
+async def removeModel(request):
+  data     = await request.json()
+
+  _app   = data.get('app',None)
+  _model = data.get('model',None)
+  _id    = data.get('id', None)
+
+  _module = importlib.import_module(f'{_app}.models')
+
+  if _module and hasattr(_module, _model):
+    _model = getattr(_module, _model)
+
+    try:
+      await _model.filter(id=_id).delete()
+    except Exception as ex:
+      print(f"[removeModel] {ex}")
+
+  params = {
+    "code" : 200,
+    "msg"  : "Operación realizada con éxito"
+  }
+
+  return params
+
+async def addModel(request):
+  data     = await request.json()
+
+  _app   = data.get('app',None)
+  _model = data.get('model',None)
+  _data  = data.get('data', None)
+
+  _module = importlib.import_module(f'{_app}.models')
+
+  if _module and hasattr(_module, _model):
+    _model = getattr(_module, _model)
+
+    try:
+      await _model.create(**_data)
+    except Exception as ex:
+      print(f"[addModel] {ex}")
+
+  params = {
+    "code" : 200,
+    "msg"  : "Operación realizada con éxito"
+  }
+
+  return params
+
 async def ApiToken_view(request,pk=None):
   from base.models import ApiToken
   import uuid
@@ -71,34 +120,32 @@ async def ApiToken_view(request,pk=None):
     "obj"  : obj
   }
 
-async def getGroups(request):
-  from base.models import Group
+async def getModelData(request):
 
   code     = 200
   msg      = "Operación realizada con éxito"
 
-  data = await Group.filter(active=True).values()
+  data = await request.json()
+
+  _app       = data.get('app', None)
+  _model     = data.get('model', None)
+  _values    = data.get('values', None)
+
+  _module = importlib.import_module(f'{_app}.models')
+  _data   = []
+
+  if _module and hasattr(_module, _model):
+    _model = getattr(_module, _model)
+
+    try:
+      _data = await _model.all().values(*_values)
+    except Exception as ex:
+      print(f"[getModelData] {ex}")
 
   params = {
     "code" : code,
     "msg"  : msg,
-    "data" : data
-  }
-
-  return params
-
-async def getPermission(request):
-  from base.models import Permission
-
-  code     = 200
-  msg      = "Operación realizada con éxito"
-
-  data = await Permission.filter(active=True).values()
-
-  params = {
-    "code" : code,
-    "msg"  : msg,
-    "data" : data
+    "data" : _data
   }
 
   return params
