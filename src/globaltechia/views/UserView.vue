@@ -121,6 +121,9 @@
 
       <button type="button" @click="calando">asd</button>
     </template>
+    <template #footer>
+      <SaveButton @click="save"/>
+    </template>
   </GenericView>
 
 </template>
@@ -135,7 +138,7 @@ import {
   removeModel,
   addModel,
   getModelData,
-  openModal
+  openModal, getFullURI, getFormData, ValidateData
 } from "@/globaltechia/utils.js";
 import GenericItem from "@/globaltechia/components/GenericItem.vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
@@ -143,9 +146,9 @@ import ListButton from "@/globaltechia/components/buttons/ListButton.vue";
 import TitleView from "@/globaltechia/components/buttons/TitleView.vue";
 import SelectModel from "@/globaltechia/components/SelectModel.vue";
 import PruebaModal from "@/modals/PruebaModal.vue";
+import SaveButton from "@/globaltechia/components/buttons/SaveButton.vue";
+import router from "@/router/index.js";
 const items = ref({});
-const last_component = ref(null);
-const last_component_params = ref({});
 
 const route = useRoute()
 
@@ -250,16 +253,21 @@ const calando = () => {
   openModal(PruebaModal,{pk:1,name:"alex"});
 }
 
-/**
-const addGroup = () => {
-  openModal(last_component,PruebaModal);
-}
+const save = () => {
 
-const addPermission = () => {
-  openModal(last_component,PruebaModalSegundo);
-}
+  let is_valid = ValidateData(items.value);
+  let data     = getFormData(items.value);
+  let full_uri = getFullURI(route.params.app,"User",route.params.id);
 
-**/
+  if (is_valid) {
+
+    HttpRequest("POST",full_uri,data)
+        .then((data_json) => data_json.json())
+        .then((data) => {
+          router.replace({ name: 'list_user', params: { app: route.params.app,view:route.params.view } });
+        });
+  }
+}
 
 </script>
 

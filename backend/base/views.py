@@ -157,3 +157,39 @@ async def getModelData(request):
   }
 
   return params
+
+async def User_view(request,pk=None):
+  from base.models import User
+
+  code  = 200
+  msg   = "Operación realizada con éxito"
+  _form = None
+  obj   = None
+
+  if pk:
+    obj = await User.filter(id=pk).last()
+
+  if request.method == 'GET':
+    _form = await User.schema(obj=obj)
+  else:
+    data = await request.json()
+
+    del data['password']
+    del data['confirm_password']
+
+    try:
+      if not obj:
+        obj = await User.create(**data)
+      else:
+        await User.filter(id=pk).update(**data)
+    except Exception as ex:
+      print(ex)
+
+  params = {
+    "code" : code,
+    "msg"  : msg,
+    "form" : _form,
+    "obj"  : obj
+  }
+
+  return params

@@ -8,6 +8,9 @@ import UserView from "@/globaltechia/views/UserView.vue";
 import { Modal } from 'bootstrap';
 import {markRaw, nextTick, ref} from "vue";
 
+const last_component        = ref(null)
+const last_component_params = ref(null);
+
 function toCapital(item:string|undefined|null) {
 
   let words       = ""
@@ -263,10 +266,37 @@ async function getForm(app:string,view:string,id:number|null) {
   }
 
 }
+const ValidateData = (items:any) => {
 
-const last_component        = ref(null)
-const last_component_params = ref(null);
+   let valid = true;
 
+   Object.keys(items).forEach((key) => {
+     let item = items[key];
+     if (item.required && !item.value) {
+       item.error = "Es requerido capturar este campo."
+       valid = false;
+     }
+   });
+
+   return valid;
+
+};
+const getFormData = (items:any) => {
+  let final_data = {};
+  Object.keys(items).forEach((key) => {
+    let item = items[key];
+
+    if (item.type !== 'checkbox') {
+      final_data[item.name] = item.value;
+    }
+    else {
+      final_data[item.name] = item.value ? item.value:false;
+    }
+
+  });
+
+  return final_data;
+};
 function openModal(component:any,params:any = {}) {
 
   last_component.value = markRaw(component);
@@ -299,6 +329,8 @@ export {
    HttpRequest,
    getFullURI,
    getForm,
+   ValidateData,
+   getFormData,
    openModal,
    last_component,
    last_component_params

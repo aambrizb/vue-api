@@ -22,14 +22,14 @@
     </template>
     <template #footer>
       <div class="row">
-          <div class="col-11"></div>
-          <div class="col-1">
-            <button class="btn btn-sm btn-primary pull-right" @click="save();">
-              <span class="fa fa-save"></span>
-              Guardar
-            </button>
-          </div>
+        <div class="col-11"></div>
+        <div class="col-1">
+          <button class="btn btn-sm btn-primary pull-right" @click="save();">
+            <span class="fa fa-save"></span>
+            Guardar
+          </button>
         </div>
+      </div>
     </template>
   </GenericView>
 </template>
