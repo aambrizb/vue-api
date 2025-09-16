@@ -263,7 +263,7 @@ async function getForm(app:string,view:string,id:number|null) {
 
 }
 
-function openModal(last_component:any,component:any) {
+function openModal(last_component:any,component:any,params:any) {
 
   last_component.value = component;
 
