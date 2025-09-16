@@ -118,7 +118,8 @@
           </div>
         </div>
       </div>
-      <component :is="last_component"></component>
+
+      <button type="button" @click="calando">asd</button>
     </template>
   </GenericView>
 
@@ -127,14 +128,24 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import { useRoute } from 'vue-router'
-import {PasswordField, getForm, HttpRequest, removeModel, addModel, getModelData} from "@/globaltechia/utils.js";
+import {
+  PasswordField,
+  getForm,
+  HttpRequest,
+  removeModel,
+  addModel,
+  getModelData,
+  openModal
+} from "@/globaltechia/utils.js";
 import GenericItem from "@/globaltechia/components/GenericItem.vue";
 import GenericView from "@/globaltechia/components/GenericView.vue";
 import ListButton from "@/globaltechia/components/buttons/ListButton.vue";
 import TitleView from "@/globaltechia/components/buttons/TitleView.vue";
 import SelectModel from "@/globaltechia/components/SelectModel.vue";
+import PruebaModal from "@/modals/PruebaModal.vue";
 const items = ref({});
 const last_component = ref(null);
+const last_component_params = ref({});
 
 const route = useRoute()
 
@@ -235,6 +246,9 @@ const removePermission = (item) => {
 }
 
 
+const calando = () => {
+  openModal(PruebaModal,{pk:1,name:"alex"});
+}
 
 /**
 const addGroup = () => {

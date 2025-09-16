@@ -250,7 +250,6 @@ form.value['confirm_password'] = new PasswordField({required:false,name:"confirm
 
 | Parameters     | Type    | Description                       |
 |----------------|---------|-----------------------------------|
-| last_component | any     | Variable to assign last component |
 | component      | string  | Vue Component                     |
 | params         | number  | data modal's parameters           |
 
@@ -262,9 +261,7 @@ ModalComponent.vue
 ````
 
 ````js
-  const last_component = ref(null);
-  
-  openModal(last_component,ModalComponent,{pk:2,name:"Alex"});
+  openModal(ModalComponent,{pk:2,name:"Alex"});
 ````
 
 # Install

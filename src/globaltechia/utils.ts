@@ -6,6 +6,7 @@ import GenericList from "@/globaltechia/components/GenericList.vue";
 import DashboardView from "@/globaltechia/views/DashboardView.vue";
 import UserView from "@/globaltechia/views/UserView.vue";
 import { Modal } from 'bootstrap';
+import {markRaw, nextTick, ref} from "vue";
 
 function toCapital(item:string|undefined|null) {
 
@@ -263,20 +264,22 @@ async function getForm(app:string,view:string,id:number|null) {
 
 }
 
-function openModal(last_component:any,component:any,params:any) {
+const last_component        = ref(null)
+const last_component_params = ref(null);
 
-  last_component.value = component;
+function openModal(component:any,params:any = {}) {
 
-  setTimeout(function() {
-    var last = document.getElementById('frame_modal');
+  last_component.value = markRaw(component);
+  last_component_params.value = params;
+
+  nextTick(() => {
+    const last = document.getElementById('frame_modal');
     if (last) {
-      var myModal = new Modal(last);
+      const myModal = Modal.getOrCreateInstance(last);
       myModal.show();
     }
-
-  },200);
-
-};
+  });
+}
 
 export {
    toCapital,
@@ -296,5 +299,7 @@ export {
    HttpRequest,
    getFullURI,
    getForm,
-   openModal
+   openModal,
+   last_component,
+   last_component_params
 }
