@@ -11,6 +11,20 @@ This project is created with the objective that combine vue + fastapi.
 It is a integral project in where the components known what should do and how should communicate between them
 
 # @globaltechia/utils.js
+## Overview
+
+| Util         |
+|--------------|
+| getRouter    |
+| toCapital    |
+| HttpRequest  |
+| getModalData |
+| addModel     |
+| removeModel  |
+| getFullURI   |
+| getForm      |
+| openModal    |
+
 ## getRouter
 ### Parameters
 
