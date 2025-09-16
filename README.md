@@ -13,17 +13,19 @@ It is a integral project in where the components known what should do and how sh
 # @globaltechia/utils.js
 ## Overview
 
-| Util         |
-|--------------|
-| getRouter    |
-| toCapital    |
-| HttpRequest  |
-| getModalData |
-| addModel     |
-| removeModel  |
-| getFullURI   |
-| getForm      |
-| openModal    |
+| Util           |
+|----------------|
+| getRouter      |
+| toCapital      |
+| HttpRequest    |
+| getModalData   |
+| addModel       |
+| removeModel    |
+| getFullURI     |
+| getForm        |
+| ValidateData   |
+| getFormData    |
+| openModal      |
 
 ## getRouter
 ### Parameters
