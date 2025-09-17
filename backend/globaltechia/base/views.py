@@ -1,7 +1,8 @@
-from base.models import Navbar
+from globaltechia.base.models import Navbar
+from globaltechia.utils import getModel
 import json
 import importlib
-
+import os
 async def navbar(request):
 
   data = await Navbar.filter(parent_id=None).values()
@@ -51,10 +52,8 @@ async def removeModel(request):
   _model = data.get('model',None)
   _id    = data.get('id', None)
 
-  _module = importlib.import_module(f'{_app}.models')
-
-  if _module and hasattr(_module, _model):
-    _model = getattr(_module, _model)
+  _model = getModel(_app,_model)
+  if _model:
 
     try:
       await _model.filter(id=_id).delete()
@@ -75,10 +74,8 @@ async def addModel(request):
   _model = data.get('model',None)
   _data  = data.get('data', None)
 
-  _module = importlib.import_module(f'{_app}.models')
-
-  if _module and hasattr(_module, _model):
-    _model = getattr(_module, _model)
+  _model = getModel(_app, _model)
+  if _model:
 
     try:
       await _model.create(**_data)
@@ -132,12 +129,11 @@ async def getModelData(request):
   _values    = data.get('values', None)
   _filters   = data.get('filters', None)
 
-  _module = importlib.import_module(f'{_app}.models')
-  _data   = []
+  _data = []
 
-  if _module and hasattr(_module, _model):
-    _model = getattr(_module, _model)
+  _model = getModel(_app, _model)
 
+  if _model:
     try:
 
       _data = _model.all()

@@ -1,6 +1,7 @@
 from tortoise.models import Model
 from tortoise import fields
-import utils
+from globaltechia import utils
+
 class Navbar(utils.FrameModel):
   name       = utils.CharField(max_length=120)
   to         = utils.CharField(max_length=120,null=True)

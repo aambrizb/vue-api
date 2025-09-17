@@ -19,7 +19,7 @@
     <table class="table table-bordered table-hover table-striped table-sm">
       <thead>
         <tr>
-          <th style="width:75px;" v-if="props.selectable == true || props.selectable == 'true'">
+          <th class="text-center" style="width:75px;" v-if="props.selectable == true || props.selectable == 'true'">
             <input type="checkbox" @click="selectAll()" v-model="todo" /> Todo
           </th>
           <th v-for="x in items.headers" :class="'th-'+x.name">{{ x.label }}</th>

@@ -5,6 +5,34 @@ import math
 import importlib
 import os
 
+PACKAGE_NAME = 'globaltechia'
+
+def getModel(app,model):
+
+  if app == 'base':
+    app = f'{PACKAGE_NAME}.{app}'
+
+  _model  = None
+  _module = importlib.import_module(f'{app}.models')
+
+  if _module and hasattr(_module, model):
+    _model = getattr(_module, model)
+
+  return _model
+
+def getView(app,method):
+
+  _view       = None
+  _globaltech = ''
+
+  if app == 'base':
+    app = f'{PACKAGE_NAME}.{app}'
+
+  _module = importlib.import_module(f'{app}.views')
+  if _module and hasattr(_module, method):
+    _view = getattr(_module, method)
+
+  return _view
 class Pagination:
   data          = None
   list_per_page = 100
