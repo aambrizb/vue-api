@@ -122,7 +122,7 @@
       <button type="button" @click="calando">asd</button>
     </template>
     <template #footer>
-      <SaveButton @click="save"/>
+      <Actions @save="btnSave" @delete="BtnDelete" />
     </template>
   </GenericView>
 
@@ -148,6 +148,7 @@ import SelectModel from "@/globaltechia/components/SelectModel.vue";
 import PruebaModal from "@/modals/PruebaModal.vue";
 import SaveButton from "@/globaltechia/components/buttons/SaveButton.vue";
 import router from "@/router/index.js";
+import Actions from "@/globaltechia/components/buttons/Actions.vue";
 const items = ref({});
 
 const route = useRoute()
@@ -248,12 +249,11 @@ const removePermission = (item) => {
 
 }
 
-
 const calando = () => {
   openModal(PruebaModal,{pk:1,name:"alex"});
 }
 
-const save = () => {
+const btnSave = () => {
 
   let is_valid = ValidateData(items.value);
   let data     = getFormData(items.value);
@@ -266,6 +266,12 @@ const save = () => {
         .then((data) => {
           router.replace({ name: 'list_user', params: { app: route.params.app,view:route.params.view } });
         });
+  }
+}
+
+const BtnDelete = () => {
+  if (confirm("¿Realmente desea eliminar este elemento?")) {
+    alert("OK");
   }
 }
 
