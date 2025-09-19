@@ -56,7 +56,8 @@ async def removeModel(request):
   if _model:
 
     try:
-      await _model.filter(id=_id).delete()
+      obj = await _model.get(id=_id)
+      await obj.delete()
     except Exception as ex:
       print(f"[removeModel] {ex}")
 

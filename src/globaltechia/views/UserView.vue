@@ -119,10 +119,9 @@
         </div>
       </div>
 
-      <button type="button" @click="calando">asd</button>
     </template>
     <template #footer>
-      <Actions @save="btnSave" @delete="BtnDelete" />
+      <Actions @save="btnSave" @delete="btnDelete" :show_delete="$route.params.id ? true:false" />
     </template>
   </GenericView>
 
@@ -146,9 +145,9 @@ import ListButton from "@/globaltechia/components/buttons/ListButton.vue";
 import TitleView from "@/globaltechia/components/buttons/TitleView.vue";
 import SelectModel from "@/globaltechia/components/SelectModel.vue";
 import PruebaModal from "@/modals/PruebaModal.vue";
-import SaveButton from "@/globaltechia/components/buttons/SaveButton.vue";
 import router from "@/router/index.js";
 import Actions from "@/globaltechia/components/buttons/Actions.vue";
+import Swal from "sweetalert2";
 const items = ref({});
 
 const route = useRoute()
@@ -249,10 +248,6 @@ const removePermission = (item) => {
 
 }
 
-const calando = () => {
-  openModal(PruebaModal,{pk:1,name:"alex"});
-}
-
 const btnSave = () => {
 
   let is_valid = ValidateData(items.value);
@@ -269,10 +264,22 @@ const btnSave = () => {
   }
 }
 
-const BtnDelete = () => {
-  if (confirm("¿Realmente desea eliminar este elemento?")) {
-    alert("OK");
-  }
+const btnDelete = () => {
+    Swal.fire({
+      title: "¿Realmente desea eliminar este elemento?",
+      showDenyButton: true,
+      confirmButtonText: "Si",
+      denyButtonText: `No`
+    }).then((result) => {
+
+    if (result.isConfirmed) {
+      removeModel("base", "User", route.params.id).then((ev) => ev.json()).then((data) => {
+        Swal.fire(data.msg, "", "success").then(() => {
+          router.replace({ name: 'list_user', params: { app: route.params.app,view:route.params.view } });
+        });
+      });
+    }
+  });
 }
 
 </script>

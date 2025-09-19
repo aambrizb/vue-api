@@ -242,7 +242,7 @@ async function removeModel(app:string,model:string,id:number) {
   return HttpRequest('POST','method/base/removeModel',params);
 }
 
-const getFullURI = (app,view,id) => {
+const getFullURI = (app:string,view:string,id:number|null) => {
 
   let full_uri = app+"/"+view;
 
@@ -281,8 +281,8 @@ const ValidateData = (items:any) => {
    return valid;
 
 };
-const getFormData = (items:any) => {
-  let final_data = {};
+const getFormData = (items:Record<string, any>) => {
+  let final_data:Record<string, any> = {};
   Object.keys(items).forEach((key) => {
     let item = items[key];
 

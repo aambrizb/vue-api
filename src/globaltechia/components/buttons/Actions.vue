@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-2">
-      <button class="btn btn-danger" @click="handlerDelete">
+      <button class="btn btn-danger" @click="handlerDelete" v-if="show_delete">
         <span class="fa fa-trash"></span>
         Eliminar
       </button>
@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+  const props = defineProps(['show_delete']);
   const emit  = defineEmits(["delete","save"]);
 
   const handlerDelete = (ev) => {

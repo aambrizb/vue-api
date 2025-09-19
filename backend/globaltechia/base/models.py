@@ -62,6 +62,11 @@ class User(utils.FrameModel):
   superuser   = utils.BooleanField(default=False,label='Super-Usuario')
   active      = utils.BooleanField(default=True,label="Activo")
 
+  async def delete(self, using_db=None):
+    await UserGroup.filter(user_id=self.id).delete()
+    await UserPermission.filter(user_id=self.id).delete()
+    await super().delete(using_db=using_db)
+
   class Admin:
     list_display  = ['id','first_name','last_name','middle_name','email']
     list_per_page = 2
