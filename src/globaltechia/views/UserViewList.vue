@@ -7,7 +7,7 @@
     </template>
     <template #top_button>
       <div class="align-middle">
-        <CreateButton to="create_user" app="app" view="User" />
+        <CreateButton to="create_user" app="base" view="User" />
       </div>
     </template>
     <template #body>
