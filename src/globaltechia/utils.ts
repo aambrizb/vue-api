@@ -262,7 +262,7 @@ async function getForm(app:string,view:string,id:number|null) {
   const data     = await response.json()
 
   if (response.status == 200) {
-    return data.form;
+    return data;
   }
 
 }

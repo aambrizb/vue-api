@@ -2,7 +2,7 @@
   <GenericView>
     <template #header>
       <h2 class="text-center">
-        {{ toCapital($route.params.view) }}
+        {{ toCapital(name) }}
       </h2>
       <h5 class="text-center text-secondary" v-if="$route.params.id">{{ $route.params.id }}</h5>
     </template>
@@ -38,6 +38,7 @@ import Swal from "sweetalert2";
 
 const route   = useRoute();
 const router  = useRouter()
+const name    = ref('');
 const loading = ref(false);
 const items   = ref({});
 const form    = ref(null);
@@ -55,7 +56,8 @@ watch(
 const loadForm = () => {
   loading.value = true;
   getForm(route.params.app,route.params.view,route.params.id).then((data) => {
-    items.value = data;
+    name.value    = data.verbose_name;
+    items.value   = data.form;
     loading.value = false;
   });
 };

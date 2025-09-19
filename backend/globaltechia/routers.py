@@ -35,7 +35,6 @@ async def get_view(app,view,request: Request):
   # Verify, if exists model.
   if not _view:
     _model = utils.getModel(app,view)
-
     if _model and request.method == 'POST':
       payload = await request.json()
       try:
@@ -53,10 +52,10 @@ async def get_view(app,view,request: Request):
         }
     else:
       _schema = await _model.schema(obj=None)
-
       return {
-        "form"     : _schema,
-        "messages" : []
+        "verbose_name" : _model.Meta.verbose_name if _model.Meta.verbose_name else view,
+        "form"         : _schema,
+        "messages"     : []
       }
   else:
     try:
@@ -141,9 +140,10 @@ async def get_list(app,view,request: Request):
           _headers.append(_tmp)
 
       return {
-        "props"   : _props,
-        "headers" : _headers,
-        "data"    : data
+        "verbose_name" : _model.Meta.verbose_name if _model.Meta.verbose_name else view,
+        "props"        : _props,
+        "headers"      : _headers,
+        "data"         : data
       }
 
     else:
@@ -220,8 +220,9 @@ async def edit_view(app,view,id,request: Request):
       _tmp = await _model.filter(id=id).last()
 
       return {
-        "form"     : await _model.schema(obj=_tmp),
-        "messages" : []
+        "verbose_name" : _model.Meta.verbose_name if _model.Meta.verbose_name else view,
+        "form"         : await _model.schema(obj=_tmp),
+        "messages"     : []
       }
 
   else:
@@ -233,7 +234,6 @@ async def edit_view(app,view,id,request: Request):
         "status" : 404,
         "msg"    : str(ex)
       }
-
 
   return {
     "method" : request['method'],

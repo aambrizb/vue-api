@@ -1,7 +1,7 @@
 <template>
   <GenericView>
     <template #header>
-      <TitleView view="Usuario" :id="$route.params.id" />
+      <TitleView :view="name" :id="$route.params.id" />
     </template>
     <template #top_button>
       <ListButton to="list_user" :app="$route.params.app" view="User" />
@@ -148,6 +148,8 @@ import PruebaModal from "@/modals/PruebaModal.vue";
 import router from "@/router/index.js";
 import Actions from "@/globaltechia/components/buttons/Actions.vue";
 import Swal from "sweetalert2";
+
+const name  = ref("");
 const items = ref({});
 
 const route = useRoute()
@@ -159,7 +161,13 @@ const data_usergroup      = ref([]);
 const data_userpermission = ref([]);
 
 onMounted(async () => {
-  items.value = await getForm("base","User", route.params.id);
+
+  await getForm("base","User", route.params.id).then((data) => {
+    console.log(data);
+    name.value = data.verbose_name;
+    items.value = data.form;
+  });
+
   items.value['password']         = new PasswordField({required:false,name:"password",label:"Contraseña",label_class:"col-lg-4 col-md-4 col-xs-12",input_class:'col-lg-6 col-md-6 col-xs-12'});
   items.value['confirm_password'] = new PasswordField({required:false,name:"confirm_password",label_class:"col-lg-4 col-md-4 col-xs-12",input_class:'col-lg-6 col-md-6 col-xs-12'});
 

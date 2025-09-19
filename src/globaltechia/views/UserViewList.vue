@@ -11,7 +11,7 @@
       </div>
     </template>
     <template #body>
-      <Tabla to="edit_user" app="base" view="User" selectable="true" :query_params="query_params"/>
+      <GenericTable to="edit_user" app="base" view="User" selectable="true" :query_params="query_params"/>
     </template>
   </GenericList>
 </template>
@@ -19,7 +19,7 @@
 <script setup>
 import GenericList from "@/globaltechia/components/GenericList.vue";
 import CreateButton from "@/globaltechia/components/buttons/CreateButton.vue";
-import Tabla from "@/globaltechia/components/Tabla.vue";
+import GenericTable from "@/globaltechia/components/GenericTable.vue";
 
 const query_params = window.location.search;
 

@@ -17,12 +17,18 @@ class Navbar(utils.FrameModel):
   )
   active     = fields.BooleanField(default=True)
 
+  class Meta:
+    verbose_name = 'Menu'
+
   def __str__(self):
     return self.name
 
 class Permission(utils.FrameModel):
   name   = utils.CharField(max_length=20,label="Nombre")
   active = utils.BooleanField(default=True,label="Activo")
+
+  class Meta:
+    verbose_name = 'Permiso'
 
 class FrameAdmin:
   list_display = []
@@ -32,6 +38,8 @@ class Group(utils.FrameModel):
   name   = utils.CharField(label='Nombre',help_text='Aqui puede ingresar el nombre',max_length=120)
   active = utils.BooleanField(label='Activo',help_text='indica que se encuentra activo o no',default=True)
 
+  class Meta:
+    verbose_name = 'Grupo'
   #class Admin(FrameAdmin):
   #  list_display = ['name','active']
   #  search_field = ['name']
@@ -61,6 +69,9 @@ class User(utils.FrameModel):
   last_login  = utils.DatetimeField(show=False,null=True)
   superuser   = utils.BooleanField(default=False,label='Super-Usuario')
   active      = utils.BooleanField(default=True,label="Activo")
+
+  class Meta:
+    verbose_name = 'Usuario'
 
   async def delete(self, using_db=None):
     await UserGroup.filter(user_id=self.id).delete()
@@ -99,6 +110,9 @@ class ApiToken(utils.FrameModel):
   name   = utils.CharField(max_length=120,label="Nombre")
   token  = utils.CharField(max_length=255,show=False)
   active = utils.BooleanField(default=True, label="Activo")
+
+  class Meta:
+    verbose_name = 'Api Token'
 
   def __str__(self):
     return self.name

@@ -209,6 +209,8 @@ class FrameModel(Model):
 
   id = IntField(pk=True,show=False)
 
+  class Meta:
+    verbose_name = None
   @classmethod
   async def schema(self,obj=None):
     tmp = {}

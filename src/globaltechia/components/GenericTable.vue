@@ -10,10 +10,10 @@
           Buscar
         </button>
       </div>
+    </div>
+    <div class="row">
       <div class="col-1">
-        <button class="btn btn-sm btn-secondary -pull-right" hidden>
-          <span class="fa fa-download"></span>
-        </button>
+        <span class="fa fa-trash-alt text-danger ml-4" style="cursor:pointer;" @click="RemoveItems"></span>
       </div>
     </div>
     <table class="table table-bordered table-hover table-striped table-sm">
@@ -76,8 +76,12 @@
  import {onMounted, ref} from "vue";
  import {HttpRequest} from "@/globaltechia/utils.ts";
  import {useRouter} from "vue-router";
+ import Swal from "sweetalert2";
 
  const props        = defineProps(['to','app','view','selectable','query_params']);
+ const emit         = defineEmits(["loaded"]);
+
+ const name         = ref('');
  const items        = ref({});
  const router       = useRouter()
  const todo         = ref(false);
@@ -152,6 +156,8 @@
   HttpRequest("GET",props.app+"/"+props.view+"/list"+props.query_params)
         .then((data_json) => data_json.json())
         .then((data) => {
+
+          name.value   = data.verbose_name;
           items.value  = data;
           config.value = data.props;
 
@@ -163,7 +169,31 @@
             total_pages.value = data.props.pagination.total_pages;
           }
 
+          emit("loaded",name);
         });
+ }
+
+ const RemoveItems = () => {
+   let selected = items.value.data.filter((item) => item.selected);
+   if (selected.length == 0) {
+    Swal.fire("Debe seleccionar al menos un elemento.", "", "warning");
+   }
+   else {
+     const ids = selected.map(item => item.id);
+     HttpRequest("POST","method/base/removeItems",{
+       app   : props.app,
+       view  : props.view,
+       data  : JSON.stringify(ids)
+     }).then(
+       (item) => item.json()
+     ).then((data) => {
+       if (data.code == 200) {
+         Swal.fire(data.msg, "", "success");
+         search();
+       }
+     })
+   }
+
  }
 </script>
 

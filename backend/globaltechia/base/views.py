@@ -1,8 +1,6 @@
 from globaltechia.base.models import Navbar
 from globaltechia.utils import getModel
-import json
-import importlib
-import os
+
 async def navbar(request):
 
   data = await Navbar.filter(parent_id=None).values()
@@ -155,10 +153,37 @@ async def ViewUser(request,pk=None):
       print(ex)
 
   params = {
-    "code" : code,
-    "msg"  : msg,
-    "form" : _form,
-    "obj"  : obj
+    "code"         : code,
+    "msg"          : msg,
+    "form"         : _form,
+    "obj"          : obj,
+    "verbose_name" : User.Meta.verbose_name if User.Meta.verbose_name else 'User',
+  }
+
+  return params
+
+
+async def removeItems(request):
+  import json
+
+  data = await request.json()
+
+  app   = data.get('app',None)
+  view  = data.get('view',None)
+  data  = data.get('data',[])
+
+  if app and view and data:
+
+    data = json.loads(data)
+    _model = getModel(app,view)
+    try:
+      await _model.filter(id__in=data).delete()
+    except Exception as ex:
+      pass
+
+  params = {
+    "code" : 200,
+    "msg"  : "Operación realizada con éxito"
   }
 
   return params
