@@ -102,3 +102,11 @@ class ApiToken(utils.FrameModel):
 
   def __str__(self):
     return self.name
+
+  async def save(self, *args, **kwargs):
+    import uuid
+
+    if not self.token:
+      self.token = str(uuid.uuid4())
+
+    await super().save(*args, **kwargs)

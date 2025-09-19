@@ -20,7 +20,7 @@ def getModel(app,model):
 
   return _model
 
-def getView(app,method):
+def getView(app,method,prefix=""):
 
   _view       = None
   _globaltech = ''
@@ -28,9 +28,12 @@ def getView(app,method):
   if app == 'base':
     app = f'{PACKAGE_NAME}.{app}'
 
+  _prefix = f'{prefix}{method}'
+
   _module = importlib.import_module(f'{app}.views')
-  if _module and hasattr(_module, method):
-    _view = getattr(_module, method)
+
+  if _module and hasattr(_module, _prefix):
+    _view = getattr(_module, _prefix)
 
   return _view
 class Pagination:

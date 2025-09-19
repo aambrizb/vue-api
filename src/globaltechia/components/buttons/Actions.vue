@@ -1,14 +1,23 @@
 <template>
   <div class="row">
-    <div class="col-2">
-      <button class="btn btn-danger" @click="handlerDelete" v-if="show_delete">
+    <div class="col-lg-2 col-md-2 col-xs-12">
+      <button class="btn btn-sm btn-danger" @click="handlerDelete" v-if="show_delete">
         <span class="fa fa-trash"></span>
         Eliminar
       </button>
     </div>
-    <div class="col-8"></div>
-    <div class="col-2 text-right">
-      <button class="btn btn-primary" @click="handlerSave">
+    <div class="col-4"></div>
+    <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+      <button class="btn btn-sm btn-outline-secondary m-1" @click="handlerSave">
+        <span class="fa fa-save"></span>
+        Guardar y crear otro
+      </button>
+      <button class="btn btn-sm btn-outline-secondary m-1" @click="handlerSave">
+        <span class="fa fa-save"></span>
+        Guardar y continuar editando
+      </button>
+
+      <button class="btn btn-sm btn-primary m-1" @click="handlerSave">
         <span class="fa fa-save"></span>
         Guardar
       </button>

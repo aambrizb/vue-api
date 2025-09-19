@@ -30,7 +30,7 @@ async def get_method(app,method,request: Request):
 @router.api_route("/api/{app}/{view}",methods=["GET", "POST"])
 async def get_view(app,view,request: Request):
 
-  _view     = utils.getView(app, view)
+  _view     = utils.getView(app, view,prefix="View")
 
   # Verify, if exists model.
   if not _view:
@@ -193,7 +193,7 @@ async def delete_view(app,view,id,request: Request):
 @router.api_route("/api/{app}/{view}/{id}",methods=["GET", "POST"])
 async def edit_view(app,view,id,request: Request):
 
-  _view = utils.getView(app,view)
+  _view = utils.getView(app,view,prefix="View")
 
   # Verify, if exists model.
   if not _view:

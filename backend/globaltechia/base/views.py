@@ -90,34 +90,6 @@ async def addModel(request):
 
   return params
 
-async def ApiToken_view(request,pk=None):
-  from base.models import ApiToken
-  import uuid
-
-  _form = None
-  obj   = None
-
-  if pk:
-    obj = await ApiToken.filter(id=pk).last()
-
-  if request.method == 'GET':
-    _form = await ApiToken.schema(obj=obj)
-  elif request.method == 'POST':
-    data = await request.json()
-    data['token'] = str(uuid.uuid4())
-    try:
-      if not obj:
-        obj = await ApiToken.create(**data)
-      else:
-        await ApiToken.filter(id=pk).update(**data)
-    except Exception as ex:
-      print(ex)
-
-  return {
-    "form" : _form,
-    "obj"  : obj
-  }
-
 async def getModelData(request):
 
   code     = 200
@@ -155,8 +127,8 @@ async def getModelData(request):
 
   return params
 
-async def User_view(request,pk=None):
-  from base.models import User
+async def ViewUser(request,pk=None):
+  from globaltechia.base.models import User
 
   code  = 200
   msg   = "Operación realizada con éxito"
