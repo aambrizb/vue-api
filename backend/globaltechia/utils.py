@@ -1,12 +1,41 @@
 from tortoise.models import Model
 from tortoise import fields
+from fastapi import HTTPException
 from tortoise.queryset import QuerySet
 from argon2 import PasswordHasher, Type
+from functools import wraps
 import math
 import importlib
 import os
 
 PACKAGE_NAME = 'globaltechia'
+
+def login_required(func):
+  @wraps(func)
+  async def wrapper(*args, **kwargs):
+    from globaltechia.base.models import User
+
+    request: Request = kwargs.get("request") or args[0]
+    token = request.headers.get("Authorization")
+    _url = request.get('path')
+
+    if 'base/login' in _url or 'base/logout' in _url:
+      return await func(*args, **kwargs)
+
+    if token:
+      token = token.split("Bearer ")
+      if len(token) == 2:
+        _user = await User.filter(token=token[1],active=True).last()
+
+        if not _user:
+          raise HTTPException(status_code=401, detail="Unauthorized")
+
+        return await func(*args, **kwargs)
+
+    else:
+      raise HTTPException(status_code=401, detail="Unauthorized")
+
+  return wrapper
 
 def getModel(app,model):
 

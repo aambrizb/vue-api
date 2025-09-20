@@ -1,9 +1,14 @@
 from globaltechia.base.models import Navbar
-from globaltechia.utils import getModel, GeneratePassword
+from globaltechia.utils import (
+  getModel,
+  GeneratePassword,
+  VerifyPassword,
+  login_required
+)
 import json
 import importlib
+import uuid
 import os
-
 async def navbar(request):
 
   data = await Navbar.filter(parent_id=None).values()
@@ -22,28 +27,35 @@ async def login(request):
   msg      = ""
   token    = None
   fullname = None
+  email    = None
 
   data = await request.json()
 
   _username = data['username']
   _passwd   = data['password']
 
-  obj = await User.filter(email=_username).last()
+  obj            = await User.filter(email=_username).last()
+  valid_password = VerifyPassword(obj.password,_passwd)
 
   if not obj:
     code = 404
     msg  = "Usuario no válido."
+  elif not valid_password:
+    code = 404
+    msg  = "Password no válido"
   else:
     code     = 200
     msg      = "Operación realizada con éxito"
-    token    = "token"
+    token    = obj.token
     fullname = f"{obj.first_name} {obj.last_name} {obj.middle_name}"
+    email    = obj.email
 
   return {
     "status"   : code,
     "msg"      : msg,
     "token"    : token,
-    "fullname" : fullname
+    "fullname" : fullname,
+    "email"    : email
   }
 
 async def removeModel(request):
@@ -157,6 +169,9 @@ async def ViewUser(request,pk=None):
       if not obj:
         obj = await User.create(**data)
       else:
+        if not obj.token:
+          obj.token = str(uuid.uuid4())
+          await obj.save()
         await User.filter(id=pk).update(**data)
     except Exception as ex:
       print(ex)

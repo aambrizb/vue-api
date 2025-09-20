@@ -188,13 +188,19 @@ function getRouter(local_routes:any,_loginView:any,_dashboardView:any) {
 
 }
 
+function logout() {
+  localStorage.removeItem('token');
+  window.location.href = '';
+}
 async function HttpRequest(method:string,uri:string,payload:any) {
-  const url = window.END_POINT+"/"+uri
+  const url    = window.END_POINT+"/"+uri
+  const _token = localStorage.getItem('token');
 
   let _opts: RequestInit = {
     method  : method,
     headers : {
-      "Content-Type":"application/json"
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+_token
     }
   }
 
@@ -202,7 +208,13 @@ async function HttpRequest(method:string,uri:string,payload:any) {
     _opts['body']                    = JSON.stringify(payload);
   }
 
-  return await fetch(url,_opts);
+  const _fetch = await fetch(url,_opts);
+
+  if (_fetch.status == 401) {
+    logout();
+  }
+
+  return _fetch
 
 }
 

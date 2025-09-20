@@ -73,6 +73,14 @@ class User(utils.FrameModel):
   class Meta:
     verbose_name = 'Usuario'
 
+  async def save(self, *args, **kwargs):
+    import uuid
+
+    if not self.token:
+      self.token = str(uuid.uuid4())
+
+    await super().save(*args, **kwargs)
+
   async def delete(self, using_db=None):
     await UserGroup.filter(user_id=self.id).delete()
     await UserPermission.filter(user_id=self.id).delete()
