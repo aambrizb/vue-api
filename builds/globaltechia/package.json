@@ -1,0 +1,22 @@
+{
+  "name": "globaltechia",
+  "version": "1.0.0",
+  "main": "dist/globaltechia.umd.js",
+  "module": "dist/globaltechia.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": ["dist", "shims-vue.d.ts"],
+  "scripts": {
+    "prebuild": "mkdir -p dist/types",
+    "build": "vite build",
+    "pack": "npm run build && npm pack"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.0"
+  },
+  "devDependencies": {
+    "vite": "^4.0.0",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "vite-plugin-dts": "^1.0.0",
+    "typescript": "^5.0.0"
+  }
+}
