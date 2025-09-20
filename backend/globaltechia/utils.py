@@ -134,6 +134,7 @@ class FrameField:
     value       = None,
     klass       = 'form-control',
     show        = True,
+    default     = False,
     **kwargs
   ):
 
@@ -158,15 +159,15 @@ class FrameField:
     self.input_class   = input_class
     self.klass         = klass
     self.show          = show
+    self.default       = default
 
     super().__init__(**kwargs)
 
   def schema(self,name,value=None,choices=[]):
-
     self.name = name
 
     self.value = value
-
+    
     if not self.label:
       self.label = self.name.capitalize()
 
@@ -181,10 +182,11 @@ class FrameField:
       "choices"      : self.choices,
       "disabled"     : self.disabled,
       "error"        : self.error,
-      "value"        : self.value,
+      "value"        : self.value if self.value else self.default,
       "klass"        : self.klass,
       "label_class"  : self.label_class,
       "input_class"  : self.input_class,
+      "default"      : self.default,
       "show"         : self.show,
       "selected"     : False
     }

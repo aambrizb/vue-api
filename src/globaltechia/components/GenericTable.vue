@@ -179,19 +179,29 @@
     Swal.fire("Debe seleccionar al menos un elemento.", "", "warning");
    }
    else {
-     const ids = selected.map(item => item.id);
-     HttpRequest("POST","method/base/removeItems",{
-       app   : props.app,
-       view  : props.view,
-       data  : JSON.stringify(ids)
-     }).then(
-       (item) => item.json()
-     ).then((data) => {
-       if (data.code == 200) {
-         Swal.fire(data.msg, "", "success");
-         search();
-       }
-     })
+
+       Swal.fire({
+        title: "¿Realmente desea eliminar este elemento?",
+        showDenyButton: true,
+        confirmButtonText: "Si",
+        denyButtonText: `No`
+      }).then((result) => {
+        if (result.isConfirmed) {
+         const ids = selected.map(item => item.id);
+         HttpRequest("POST","method/base/removeItems",{
+           app   : props.app,
+           view  : props.view,
+           data  : JSON.stringify(ids)
+         }).then(
+           (item) => item.json()
+         ).then((data) => {
+           if (data.code == 200) {
+             Swal.fire(data.msg, "", "success");
+             search();
+           }
+         })
+        }
+      });
    }
 
  }

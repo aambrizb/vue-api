@@ -22,8 +22,8 @@
             :class="getInputClass(item)"
             v-model="item.value"
             :disabled="item.disabled"
-            :checked="item.value ? 'checked':'' "
-            @input="$emit('update:item.value', $event.target.value)"
+            :checked="item.value || item.value === null ? 'checked':'' "
+            @input="$emit('update:modelValue', $event.target.value)"
             @keyup="$emit('keyup', $event)"
             @change="$emit('change', $event.target.value)"
         />
@@ -43,7 +43,7 @@
             :class="getInputClass(item)"
             v-model="item.value"
             :disabled="item.disabled"
-            @input="$emit('update:item.value', $event.target.value)"
+            @input="$emit('update:modelValue', $event.target.value)"
             @keyup="$emit('keyup', $event)"
             @change="$emit('change', $event.target.value)"
         ></textarea>
@@ -77,7 +77,7 @@
     return _tmp_class;
   });
 
-  defineEmits(['update:item.value', 'keyup', 'change'])
+  defineEmits(['update:modelValue', 'keyup', 'change'])
 
 </script>
 
