@@ -1,2 +1,3 @@
 fastapi[standard]
 tortoise-orm
+argon2-cffi

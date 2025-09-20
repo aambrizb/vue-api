@@ -1,5 +1,8 @@
 from globaltechia.base.models import Navbar
-from globaltechia.utils import getModel
+from globaltechia.utils import getModel, GeneratePassword
+import json
+import importlib
+import os
 
 async def navbar(request):
 
@@ -87,7 +90,6 @@ async def addModel(request):
   }
 
   return params
-
 async def getModelData(request):
 
   code     = 200
@@ -141,8 +143,15 @@ async def ViewUser(request,pk=None):
   else:
     data = await request.json()
 
+    _passwd         = data['password']
+    _confirm_passwd = data['confirm_password']
+
     del data['password']
     del data['confirm_password']
+
+    if _passwd and _passwd == _confirm_passwd:
+      _hash_passwd = GeneratePassword(_passwd)
+      data['password'] = _hash_passwd
 
     try:
       if not obj:

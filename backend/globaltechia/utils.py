@@ -1,6 +1,7 @@
 from tortoise.models import Model
 from tortoise import fields
 from tortoise.queryset import QuerySet
+from argon2 import PasswordHasher, Type
 import math
 import importlib
 import os
@@ -228,3 +229,30 @@ class FrameModel(Model):
           tmp[_field] = _schema
 
     return tmp
+
+def SecretHash():
+  ph = PasswordHasher(
+      time_cost   = 2,
+      memory_cost = 102400,
+      parallelism = 8,
+      hash_len    = 32,
+      salt_len    = 16,
+      type        = Type.ID
+  )
+
+  return ph
+
+def GeneratePassword(password):
+  ph = SecretHash()
+  return ph.hash(password)
+
+def VerifyPassword(hash,password):
+  ph = SecretHash()
+
+  try:
+    ph.verify(hash, password)
+    return True
+  except Exception as ex:
+    pass
+
+  return False
