@@ -13,19 +13,19 @@ It is a integral project in where the components known what should do and how sh
 # @globaltechia/utils.js
 ## Overview
 
-| Util           |
-|----------------|
-| getRouter      |
-| toCapital      |
-| HttpRequest    |
-| getModalData   |
-| addModel       |
-| removeModel    |
-| getFullURI     |
-| getForm        |
-| ValidateData   |
-| getFormData    |
-| openModal      |
+| Utils                         |
+|-------------------------------|
+| [getRouter](#getrouter)       |
+| [toCapital](#tocapital)       |
+| [HttpRequest](#httprequest)   |
+| [getModalData](#getmodaldata) |
+| [addModel](#addmodel)         |
+| [removeModel](#removemodel)   |
+| [getFullURI](#getfulluri)     |
+| [getForm](#getform)           |
+| [ValidateData](#validatedata) |
+| [getFormData](#getformdata)   |
+| [openModal](#openmodal)       |
 
 ## getRouter
 ### Parameters
@@ -246,6 +246,33 @@ form.value['confirm_password'] = new PasswordField({required:false,name:"confirm
 | label_class | Indicate class for label col            |
 | input_class | Indicate class for input col            |
 
+## ValidateData
+### Parameters
+
+| Parameters | Type  | Description        |
+|------------|-------|--------------------|
+| items      | array | Array Form |
+
+
+### Example
+
+````js
+    console.log(ValidateData(items));
+````
+
+## getFormData
+### Parameters
+
+| Parameters | Type  | Description        |
+|------------|-------|--------------------|
+| items      | array | Array Form |
+
+
+### Example
+
+````js
+    console.log(getFormData(items));
+````
 
 ## openModal
 ### Parameters
@@ -266,7 +293,9 @@ ModalComponent.vue
   openModal(ModalComponent,{pk:2,name:"Alex"});
 ````
 
-# Install
+# Install and configuration
+
+## FrontEnd
 
 | Command                      | Description                        |
 |------------------------------|------------------------------------|
@@ -275,7 +304,10 @@ ModalComponent.vue
 | npx serve dist -s            | Run SinglePage                     |
 | npm install | Install package.json |
 
+## Backend
 
-
-
+| Command                         | Description                   |
+|---------------------------------|-------------------------------|
+| pip install -r requirements.txt | Install requirements          |
+| fastapi dev main.py             | Run FastAPI mode Developer |
 
