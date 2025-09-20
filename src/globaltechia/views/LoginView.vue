@@ -66,10 +66,7 @@
 
   const login = () => {
 
-    console.log(username.value);
-    console.log(password.value);
-
-    if (username.value == null || password.value == null || username.value == '' || password.value == '') {
+    if (username.value == null || password.value == null || username.value === '' || password.value === '') {
       messages.value = [{
         type : 'danger',
         msg  : "Por favor capture usuario y contraseña para poder continuar"
@@ -82,9 +79,9 @@
       })
           .then( (data_json) => data_json.json())
           .then((data) => {
-            if (data.status == 200 && data.token) {
+            if (data.status === 200 && data.token) {
               localStorage.setItem('token', data.token)
-              localStorage.setItem('name', data.fullname)
+              localStorage.setItem('name', data.email);
               router.push('/app')
             } else {
               messages.value = [{

@@ -9,7 +9,11 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const app = createApp(App)
 
-window['END_POINT'] = "http://127.0.0.1:8000/api";
+window.PROJECT_NAME    = 'SISTEMA';
+window.PROJECT_TITLE   = 'SISTEMA EMPRESARIAL';
+window.END_POINT       = "http://127.0.0.1:8000/api";
+
+document.title = window.PROJECT_TITLE;
 
 app.use(router)
 

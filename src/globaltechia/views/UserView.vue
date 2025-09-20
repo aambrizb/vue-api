@@ -53,7 +53,7 @@
               </div>
               <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="row">
-                  <div class="col-lg-1 col-md-1 col-xs-12">Grupo</div>
+                  <div class="col-lg-2 col-md-2 col-xs-12">Grupo</div>
                   <div class="col-lg-3 col-md-3 col-xs-12">
                     <SelectModel v-model="selected_group" app="base" model="Group" model_key="id" label="name" />
                   </div>
@@ -84,7 +84,7 @@
               </div>
               <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="row">
-                  <div class="col-lg-1 col-md-1 col-xs-12">Permiso</div>
+                  <div class="col-lg-2 col-md-2 col-xs-12">Permiso</div>
                   <div class="col-lg-3 col-md-3 col-xs-12">
                     <SelectModel v-model="selected_permission" app="base" model="Permission" model_key="id" label="name" />
                   </div>
@@ -163,7 +163,6 @@ const data_userpermission = ref([]);
 onMounted(async () => {
 
   await getForm("base","User", route.params.id).then((data) => {
-    console.log(data);
     name.value = data.verbose_name;
     items.value = data.form;
   });
@@ -198,61 +197,87 @@ const onChange = (value) => {
 
 }
 const addGroup = () => {
-  if (confirm("¿Realmente desea agregar este elemento?")) {
+  Swal.fire({
+    title: "¿Realmente desea agregar este elemento?",
+    showDenyButton: true,
+    confirmButtonText: "Si",
+    denyButtonText: `No`
+  }).then((result) => {
+    if (result.isConfirmed) {
 
-      let params = {
+       let params = {
         "user_id"  : route.params.id,
         "group_id" : selected_group.value,
       }
 
       addModel("base","UserGroup",params).then((ev) => ev.json()).then((data) => {
-        if (data.code == 200) {
+        if (data.code === 200) {
           selected_group.value = null;
           loadUserGroups();
         }
       });
-
-  }
+    }
+  });
 
 }
 
 const addPermission = () => {
-  if (confirm("¿Realmente desea agregar este elemento?")) {
-
+  Swal.fire({
+    title: "¿Realmente desea agregar este elemento?",
+    showDenyButton: true,
+    confirmButtonText: "Si",
+    denyButtonText: `No`
+  }).then((result) => {
+    if (result.isConfirmed) {
       let params = {
         "user_id"       : route.params.id,
         "permission_id" : selected_permission.value,
       }
 
       addModel("base","UserPermission",params).then((ev) => ev.json()).then((data) => {
-        if (data.code == 200) {
+        if (data.code === 200) {
           selected_permission.value = null;
           loadUserPermissions();
         }
       });
-
-  }
+    }
+  });
 
 }
 const removeGroup = (item) => {
-  if (confirm("¿Realmente desea eliminar este elemento?")) {
-    removeModel("base","UserGroup",item.id).then((ev) => ev.json()).then((data) => {
-      if (data.code == 200) {
-        loadUserGroups();
-      }
-    });
-  }
+
+  Swal.fire({
+    title: "¿Realmente desea eliminar este elemento?",
+    showDenyButton: true,
+    confirmButtonText: "Si",
+    denyButtonText: `No`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      removeModel("base","UserGroup",item.id).then((ev) => ev.json()).then((data) => {
+        if (data.code === 200) {
+          loadUserGroups();
+        }
+      });
+    }
+  });
 
 }
 
 const removePermission = (item) => {
-  if (confirm("¿Realmente desea eliminar este elemento?")) {
-    removeModel("base","UserPermission",item.id).then((ev) => ev.json()).then((data) => {
-      if (data.code == 200) {
-        loadUserPermissions();
-      }
-    });
-  }
+    Swal.fire({
+    title: "¿Realmente desea eliminar este elemento?",
+    showDenyButton: true,
+    confirmButtonText: "Si",
+    denyButtonText: `No`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      removeModel("base","UserPermission",item.id).then((ev) => ev.json()).then((data) => {
+        if (data.code === 200) {
+          loadUserPermissions();
+        }
+      });
+    }
+  });
 
 }
 

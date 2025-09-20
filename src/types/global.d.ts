@@ -2,6 +2,8 @@ export {};
 
 declare global {
   interface Window {
-    END_POINT: string;
+    PROJECT_NAME  : string;
+    PROJECT_TITLE : string;
+    END_POINT     : string;
   }
 }

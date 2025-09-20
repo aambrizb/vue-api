@@ -13,7 +13,7 @@ async def navbar(request):
   return data
 
 async def login(request):
-  from base.models import User
+  from globaltechia.base.models import User
 
   code     = 404
   msg      = ""

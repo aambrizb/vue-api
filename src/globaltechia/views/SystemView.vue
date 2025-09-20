@@ -10,7 +10,7 @@
           <!-- Sidebar - Brand -->
           <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/view">
             <div class="sidebar-brand-text mx-3">
-              aambrizb
+              {{ project_name }}
             </div>
           </a>
 
@@ -137,11 +137,14 @@ import { useRouter } from 'vue-router'
 import Navbar from "@/globaltechia/components/Navbar.vue";
 import SbAdmin2 from "@/globaltechia/theme/sb-admin-2/SbAdmin2.vue";
 import {onMounted, ref} from "vue";
-const router = useRouter()
-const name = ref(null);
+
+const router       = useRouter()
+const name         = ref(null);
+const project_name = ref(null);
 
 onMounted(() => {
-  name.value= localStorage.getItem('name')
+  name.value         = localStorage.getItem('name')
+  project_name.value = window.PROJECT_NAME;
 });
 const logout = () => {
   localStorage.removeItem('token');

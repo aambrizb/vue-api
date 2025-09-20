@@ -1,5 +1,5 @@
 <template>
-  <select class="form-select" v-model="selected" @change="handleChange">
+  <select ref="select" class="form-select" v-model="selected" @change="handleChange">
     <option value="--">--</option>
     <option
         :value="item[props.model_key]"
@@ -9,19 +9,35 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import {getModelData, HttpRequest} from "@/globaltechia/utils.js";
 
   const props = defineProps(['modelValue','app','model','model_key','label']);
 
   const selected = ref(null);
   const options  = ref([]);
+  const select   = ref(null);
 
   const emit = defineEmits(["update:modelValue","change"])
 
   onMounted(() => {
     loadData();
   });
+
+  watch(
+    () => props.modelValue,
+      (newVal, oldVal) => {
+        selected.value = newVal;
+
+        if (newVal == null) {
+          nextTick(() => {
+            select.value.focus();
+          });
+
+        }
+
+      }
+  );
 
   function handleChange(event) {
     const value = event.target.value
