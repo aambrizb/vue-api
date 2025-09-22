@@ -23,7 +23,6 @@ def start_shell():
 async def createsuperuser():
   from globaltechia.base.models import User
   from globaltechia.utils import GeneratePassword
-  import asyncio
 
   _name   = input("Type your Firstname: ")
   _last   = input("Type your Lastname: ")
@@ -50,7 +49,6 @@ async def createsuperuser():
 async def resetpassword():
   from globaltechia.base.models import User
   from globaltechia.utils import GeneratePassword
-  import asyncio
 
   _email  = input("Type your email: ")
   _passwd = input("Type your password: ")
@@ -66,6 +64,19 @@ async def resetpassword():
       await obj.save()
       print("[OK] User password changed.")
 
+async def set_permissions():
+  from globaltechia.base.models import Navbar, Permission
+
+  data = await Navbar.all().values()
+  for item in data:
+    if item['app'] and item['view']:
+      _permission = f'{item["app"]}.{item["view"]}.view'
+      obj = await Permission.filter(name=_permission).last()
+      if not obj:
+        await Permission.create(name=_permission,active=True)
+        print(f"[OK] {_permission}")
+
+
 if __name__ == "__main__":
   import sys
 
@@ -78,8 +89,15 @@ if __name__ == "__main__":
   if len(sys.argv) == 2:
     if sys.argv[1] == 'shell':
       start_shell()
-    elif sys.argv[1] == 'createsuperuser':
+    elif sys.argv[1] == 'create_superuser':
       run_async(createsuperuser())
-
-    elif sys.argv[1] == 'resetpassword':
+    elif sys.argv[1] == 'reset_password':
       run_async(resetpassword())
+    elif sys.argv[1] == 'set_permissions':
+      run_async(set_permissions())
+  else:
+    print("[Commands]")
+    print("\t shell            | Access Shell")
+    print("\t create_superuser | Create Superuser")
+    print("\t reset_password   | Reset Password")
+    print("\t set_permissions  | Set Default Permissions (Navbar)")
