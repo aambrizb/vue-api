@@ -37,6 +37,17 @@ def login_required(func):
 
   return wrapper
 
+def getToken(request):
+
+  _auth  = request.headers.get("authorization","")
+  _auth  = _auth.split("Bearer ")
+  _token = ""
+
+  if len(_auth) == 2:
+    _token = _auth[1]
+
+  return _token
+
 def getModel(app,model):
 
   if app == 'base':
@@ -167,7 +178,7 @@ class FrameField:
     self.name = name
 
     self.value = value
-    
+
     if not self.label:
       self.label = self.name.capitalize()
 
@@ -285,5 +296,48 @@ def VerifyPassword(hash,password):
     return True
   except Exception as ex:
     pass
+
+  return False
+
+async def getUserPermissions(token):
+  from globaltechia.base.models import (
+    User,
+    UserGroup,
+    UserPermission,
+    GroupPermission,
+    Permission
+  )
+
+  ar_permissions   = []
+  _userpermissions = []
+
+  obj            = await User.filter(token=token).last()
+
+  if obj:
+    if not obj.superuser:
+      _groups          = await UserGroup.filter(user_id=obj.id).values_list('group_id',flat=True)
+      _userpermissions = await UserPermission.filter(user_id=obj.id).values_list('permission__name',flat=True)
+      ar_permissions   = await GroupPermission.filter(group_id__in=_groups).values_list('permission__name',flat=True)
+    else:
+      ar_permissions = await Permission.all().values_list('name',flat=True)
+
+    ar_permissions = ar_permissions+_userpermissions
+
+  return ar_permissions
+
+async def getUserGroups(token):
+  from globaltechia.base.models import UserGroup
+
+  ar_groups = await UserGroup.filter(
+    user__token=token
+  ).values_list('group__name',flat=True)
+
+  return ar_groups
+
+async def hasPermission(token,permission):
+
+  ar_permissions = await getUserPermissions(token)
+  if permission in ar_permissions:
+    return True
 
   return False

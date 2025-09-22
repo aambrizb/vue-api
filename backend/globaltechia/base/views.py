@@ -1,15 +1,20 @@
 from globaltechia.base.models import Navbar
 from globaltechia.utils import (
+  getToken,
+  getUserPermissions,
   getModel,
   GeneratePassword,
   VerifyPassword,
-  login_required
+  login_required,
 )
 import json
 import importlib
 import uuid
 import os
+
 async def navbar(request):
+  _token       = getToken(request)
+  _permissions = await getUserPermissions(_token)
 
   data = await Navbar.filter(parent_id=None).values()
 
@@ -17,6 +22,12 @@ async def navbar(request):
     item['children'] = await Navbar.filter(
       parent_id=item['id']
     ).values()
+
+    item['children'] = [
+      x for x in item['children'] if not x.get('permission') or x.get('permission') in _permissions
+    ]
+
+  data = [item for item in data if len(item["children"]) > 0]
 
   return data
 

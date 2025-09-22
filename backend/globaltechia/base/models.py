@@ -15,6 +15,7 @@ class Navbar(utils.FrameModel):
     on_delete=fields.RESTRICT,
     label="Padre"
   )
+  permission = fields.CharField(max_length=120,null=True)
   active     = fields.BooleanField(default=True)
 
   class Meta:
