@@ -15,14 +15,24 @@ app.add_middleware(
 
 app.include_router(routers.router)
 
+DATABASE_CONFIG = {
+    "connections": {
+        "default": "sqlite://db.sqlite3"
+    },
+    "apps": {
+        "models": {
+            "models": ["globaltechia.base.models"],
+            "default_connection": "default",
+        }
+    },
+}
 @app.get("/")
 def read_root():
     return {"status": "ready"}
 
 register_tortoise(
     app,
-    db_url                 = "sqlite://db.sqlite3",  # Can be postgres, mysql, etc.
-    modules                = {"models": ["globaltechia.base.models"]},
+    config                 = DATABASE_CONFIG,
     generate_schemas       = True,  # Auto-create tables
     add_exception_handlers = True,
 )

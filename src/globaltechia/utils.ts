@@ -1,13 +1,18 @@
-import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 import LoginView from "./views/LoginView.vue";
 import SystemView from "./views/SystemView.vue";
 import GenericModelView from "./components/GenericModelView.vue";
 import GenericList from "./components/GenericList.vue";
 import DashboardView from "./views/DashboardView.vue";
 import UserView from "./views/UserView.vue";
-import { Modal } from 'bootstrap';
-import {markRaw, nextTick, ref, Component} from "vue";
 import UserViewList from "./views/UserViewList.vue";
+import GroupView from "./views/GroupView.vue";
+import GroupViewList from "./views/GroupViewList.vue";
+import { Modal } from 'bootstrap';
+import {markRaw, nextTick, ref} from "vue";
+import type { Component } from "vue";
+
 
 const last_component        = ref(null)
 const last_component_params = ref(null);
@@ -144,6 +149,21 @@ function getRouter(
       path: '/:app/User/:id',
       name: 'edit_user',
       component: UserView,
+    },
+    {
+      path: '/:app/Group/list',
+      name: 'list_group',
+      component: GroupViewList,
+    },
+    {
+      path: '/:app/Group',
+      name: 'create_group',
+      component: GroupView,
+    },
+    {
+      path: '/:app/Group/:id',
+      name: 'edit_group',
+      component: GroupView,
     },
     {
       path      : ':app/:view',

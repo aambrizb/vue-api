@@ -44,9 +44,12 @@ class Group(utils.FrameModel):
   #  list_display = ['name','active']
   #  search_field = ['name']
 
-
   def __str__(self):
     return self.name
+
+  async def delete(self, using_db=None):
+    await GroupPermission.filter(group_id=self.id).delete()
+    await super().delete(using_db=using_db)
 
 class GroupPermission(Model):
 
@@ -62,7 +65,7 @@ class GroupPermission(Model):
 class User(utils.FrameModel):
   first_name  = utils.CharField(max_length=45,label="Nombre",help_text="Ingrese nombre completo. ej. Alejandro",label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
   last_name   = utils.CharField(max_length=45,label="Apellido Paterno",help_text="Apellido Paterno ej. Ambríz",label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
-  middle_name = utils.CharField(max_length=45,label="Apellido Materno",help_text="Apellido Materno ej. Bedolla",label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
+  middle_name = utils.CharField(max_length=45,null=True,label="Apellido Materno",help_text="Apellido Materno ej. Bedolla",label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
   email       = utils.CharField(max_length=120,label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
   password    = utils.CharField(max_length=220,show=False)
   token       = utils.CharField(max_length=220,null=True,show=False)
