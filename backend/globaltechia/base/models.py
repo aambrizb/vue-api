@@ -25,7 +25,7 @@ class Navbar(utils.FrameModel):
     return self.name
 
 class Permission(utils.FrameModel):
-  name   = utils.CharField(max_length=20,label="Nombre")
+  name   = utils.CharField(max_length=120,label="Nombre")
   active = utils.BooleanField(default=True,label="Activo")
 
   class Meta:
