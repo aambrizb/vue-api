@@ -4,14 +4,14 @@
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <ul class="nav flex-column">
+  <ul class="nav" style="height:750px;overflow:auto;">
     <li class="nav-item" v-for="item in items">
       <div v-if="!item.to" class="sidebar-heading">
         {{ item.name }}
       </div>
 
       <div v-for="x in item.children">
-        <router-link class="nav-link collapsed" data-toggle="collapse" href="#" :to="{ name: x.to, params: { 'app':x.app,'view': x.view }}" v-if="x.to" aria-expanded="true" aria-controls="collapseTwo">
+        <router-link class="nav-link" href="#" :to="{ name: x.to, params: { 'app':x.app,'view': x.view }}" v-if="x.to" aria-expanded="true" aria-controls="collapseTwo">
           <span class="icon" :class="x.icon_class"></span> &nbsp;
           <span>{{ x.name }}</span>
         </router-link>

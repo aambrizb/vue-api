@@ -210,11 +210,18 @@ class CharField(FrameField,fields.CharField):
 class IntField(FrameField,fields.IntField):
   type = 'text'
 
+class DateField(FrameField,fields.DateField):
+  type  = 'date'
+
 class DatetimeField(FrameField,fields.DatetimeField):
   type  = 'datetime-local'
 
 class BooleanField(FrameField,fields.BooleanField):
   type  = 'checkbox'
+  klass = ''
+
+class FloatField(FrameField,fields.FloatField):
+  type  = 'text'
   klass = ''
 
 class ForeignKeyFieldInstance(fields.relational.ForeignKeyFieldInstance,FrameField):
