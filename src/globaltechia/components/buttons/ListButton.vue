@@ -2,10 +2,10 @@
   <div class="row">
     <div class="col-11"></div>
     <div class="col-1">
-      <router-link class="btn btn-sm btn-secondary pull-right" :to="{ name: props.to, params: { 'app':props.app,'view': props.view }}">
+      <a class="btn btn-sm btn-secondary pull-right" :href="'/view/'+props.app+'/'+props.view+'/list'">
         <span class="fa fa-list"></span>
         Listar
-      </router-link>
+      </a>
     </div>
   </div>
 

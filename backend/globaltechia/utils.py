@@ -222,7 +222,6 @@ class BooleanField(FrameField,fields.BooleanField):
 
 class FloatField(FrameField,fields.FloatField):
   type  = 'text'
-  klass = ''
 
 class ForeignKeyFieldInstance(fields.relational.ForeignKeyFieldInstance,FrameField):
   def __init__(self, model_name, *args, **kwargs):

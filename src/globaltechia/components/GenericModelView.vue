@@ -7,10 +7,7 @@
       <h5 class="text-center text-secondary" v-if="$route.params.id">{{ $route.params.id }}</h5>
     </template>
     <template #top_button>
-      <router-link class="btn btn-sm btn-secondary pull-right" :to="{ name: 'list', params: { 'app':$route.params.app,'view': $route.params.view }}">
-        <span class="fa fa-list"></span>
-        Listar
-      </router-link>
+      <ListButton to="list" :app="$route.params.app" :view="$route.params.view"/>
     </template>
     <template #body>
       <div class="text-center" v-if="loading">
@@ -35,6 +32,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {getForm, getFullURI, HttpRequest, removeModel, toCapital} from "../utils";
 import Actions from "./buttons/Actions.vue";
 import Swal from "sweetalert2";
+import ListButton from "./buttons/ListButton.vue";
 
 const route   = useRoute();
 const router  = useRouter()
