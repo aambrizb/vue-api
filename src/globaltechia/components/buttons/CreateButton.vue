@@ -1,8 +1,8 @@
 <template>
-  <router-link class="btn btn-sm btn-primary pull-right" :to="{ name: props.to, params: { 'app':props.app,'view': props.view }}">
-    <span class="fa fa-folder"></span>
+  <a class="btn btn-sm btn-primary pull-right" :href="'/view/'+props.app+'/'+props.view">
+    <span class="fa fa-folder" ></span>
     Nuevo
-  </router-link>
+  </a>
 </template>
 
 <script setup>

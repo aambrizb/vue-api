@@ -136,32 +136,32 @@ function getRouter(
       component : _dashboardView,
     },
     {
-      path: '/:app/User/list',
+      path: '/view/:app/User/list',
       name: 'list_user',
       component: UserViewList,
     },
     {
-      path: '/:app/User',
+      path: '/view/:app/User',
       name: 'create_user',
       component: UserView,
     },
     {
-      path: '/:app/User/:id',
+      path: '/view/:app/User/:id(\\d+)',
       name: 'edit_user',
       component: UserView,
     },
     {
-      path: '/:app/Group/list',
+      path: '/view/:app/Group/list',
       name: 'list_group',
       component: GroupViewList,
     },
     {
-      path: '/:app/Group',
+      path: '/view/:app/Group',
       name: 'create_group',
       component: GroupView,
     },
     {
-      path: '/:app/Group/:id',
+      path: '/view/:app/Group/:id(\\d+)',
       name: 'edit_group',
       component: GroupView,
     },
@@ -171,7 +171,7 @@ function getRouter(
       component : GenericModelView,
     },
     {
-      path      : ':app/:view/:id',
+      path      : ':app/:view/:id(\\d+)',
       name      : 'edit',
       component : GenericModelView,
     },
