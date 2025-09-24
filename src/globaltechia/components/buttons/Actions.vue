@@ -8,16 +8,16 @@
     </div>
     <div class="col-4"></div>
     <div class="col-lg-6 col-md-6 col-xs-12 text-right">
-      <button class="btn btn-sm btn-outline-secondary m-1" @click="handlerSave">
+      <button class="btn btn-sm btn-outline-secondary m-1" @click="handlerSave($event,'SAVE_ANOTHER')">
         <span class="fa fa-save"></span>
         Guardar y crear otro
       </button>
-      <button class="btn btn-sm btn-outline-secondary m-1" @click="handlerSave">
+      <button class="btn btn-sm btn-outline-secondary m-1" @click="handlerSave($event,'SAVE_EDIT')">
         <span class="fa fa-save"></span>
         Guardar y continuar editando
       </button>
 
-      <button class="btn btn-sm btn-primary m-1" @click="handlerSave">
+      <button class="btn btn-sm btn-primary m-1" @click="handlerSave($event,'SAVE_LIST')">
         <span class="fa fa-save"></span>
         Guardar
       </button>
@@ -33,8 +33,8 @@
     emit("delete",ev);
   }
 
-  const handlerSave = (ev) => {
-    emit("save",ev);
+  const handlerSave = (ev,extra) => {
+    emit("save",ev,extra);
   }
 </script>
 

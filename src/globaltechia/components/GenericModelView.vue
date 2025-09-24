@@ -18,7 +18,7 @@
       <VueForm ref="form" :items="items"/>
     </template>
     <template #footer>
-      <Actions @delete="btnDelete()" @save="btnSave()" :show_delete="$route.params.id ? true:false" />
+      <Actions @delete="btnDelete()" @save="btnSave" :show_delete="$route.params.id ? true:false" />
     </template>
   </GenericView>
 </template>
@@ -60,7 +60,8 @@ const loadForm = () => {
   });
 };
 
-const btnSave = () => {
+const btnSave = (ev,extra) => {
+
   let is_valid = form.value?.is_valid();
   let data = form.value?.data();
   let full_uri = getFullURI(route.params.app,route.params.view,route.params.id);
@@ -70,9 +71,21 @@ const btnSave = () => {
     HttpRequest("POST",full_uri,data)
         .then((data_json) => data_json.json())
         .then((data) => {
+
           Swal.fire("Operación realizada con éxito", "", "success");
           setTimeout(function() {
-            router.replace({ name: 'list', params: { app: route.params.app,view:route.params.view } });
+            let base_url = '/view/'+route.params.app+'/'+route.params.view;
+
+            if (extra === 'SAVE_ANOTHER') {
+              window.location.href = base_url;
+            }
+            else if (extra === 'SAVE_EDIT') {
+              window.location.href = base_url+"/"+data.id;
+            }
+            else if (extra == 'SAVE_LIST') {
+              window.location.href = base_url+"/list";
+            }
+
           },800);
 
         });
