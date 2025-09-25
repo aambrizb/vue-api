@@ -29,9 +29,8 @@ import {watch, ref, onMounted} from "vue";
 import GenericView from "./GenericView.vue";
 import VueForm from "./GenericForm.vue";
 import {useRoute, useRouter} from 'vue-router'
-import {getForm, getFullURI, HttpRequest, removeModel, toCapital} from "../utils";
+import {getForm, toCapital, DefaultBtnSave, DefaultBtnDelete} from "../utils";
 import Actions from "./buttons/Actions.vue";
-import Swal from "sweetalert2";
 import ListButton from "./buttons/ListButton.vue";
 
 const route   = useRoute();
@@ -61,55 +60,11 @@ const loadForm = () => {
 };
 
 const btnSave = (ev,extra) => {
-
-  let is_valid = form.value?.is_valid();
-  let data = form.value?.data();
-  let full_uri = getFullURI(route.params.app,route.params.view,route.params.id);
-
-  if (is_valid) {
-
-    HttpRequest("POST",full_uri,data)
-        .then((data_json) => data_json.json())
-        .then((data) => {
-
-          Swal.fire("Operación realizada con éxito", "", "success");
-          setTimeout(function() {
-            let base_url = '/view/'+route.params.app+'/'+route.params.view;
-
-            if (extra === 'SAVE_ANOTHER') {
-              window.location.href = base_url;
-            }
-            else if (extra === 'SAVE_EDIT') {
-              window.location.href = base_url+"/"+data.id;
-            }
-            else if (extra == 'SAVE_LIST') {
-              window.location.href = base_url+"/list";
-            }
-
-          },800);
-
-        });
-
-  }
-
+  DefaultBtnSave(extra,route.params.app,route.params.view,items,route.params.id);
 };
 
 const btnDelete = () => {
-  Swal.fire({
-      title: "¿Realmente desea eliminar este elemento?",
-      showDenyButton: true,
-      confirmButtonText: "Si",
-      denyButtonText: `No`
-    }).then((result) => {
-
-      if (result.isConfirmed) {
-        removeModel(route.params.app, route.params.view, route.params.id).then((ev) => ev.json()).then((data) => {
-          Swal.fire(data.msg, "", "success").then(() => {
-            router.replace({ name: 'list', params: { app: route.params.app,view:route.params.view } });
-          });
-        });
-      }
-  });
+  DefaultBtnDelete(route.params.app,route.params.view,route.params.id);
 }
 
 </script>

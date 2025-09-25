@@ -12,6 +12,7 @@ import GroupViewList from "./views/GroupViewList.vue";
 import { Modal } from 'bootstrap';
 import {markRaw, nextTick, ref} from "vue";
 import type { Component } from "vue";
+import Swal from "sweetalert2";
 
 
 const last_component        = ref(null)
@@ -358,6 +359,60 @@ function openModal(component:any,params:any = {}) {
   });
 }
 
+const DefaultBtnSave = (type:string,app:string,view:string,items:any,id?:number|null) => {
+
+  let is_valid = ValidateData(items.value);
+  let data     = getFormData(items.value);
+  let full_uri = getFullURI(app,view,id ? id:null);
+
+  if (is_valid) {
+
+    HttpRequest("POST",full_uri,data)
+        .then((data_json) => data_json.json())
+        .then((data) => {
+          Swal.fire('Operación realizada con éxito', "", "success");
+          setTimeout(function() {
+
+            let base_url = '/view/'+getFullURI(app,view,null);
+
+            if (type === 'SAVE_EDIT' && (data.id == null || data.id == undefined)) {
+              type = 'SAVE_LIST';
+            }
+
+            if (type === 'SAVE_ANOTHER') {
+              window.location.href = base_url;
+            }
+            else if (type === 'SAVE_EDIT') {
+              window.location.href = base_url+"/"+data.id;
+            }
+            else if (type == 'SAVE_LIST') {
+              window.location.href = base_url+"/list";
+            }
+
+          },800);
+        });
+  }
+}
+
+const DefaultBtnDelete = (app:string,view:string,id:number) => {
+    Swal.fire({
+      title: "¿Realmente desea eliminar este elemento?",
+      showDenyButton: true,
+      confirmButtonText: "Si",
+      denyButtonText: `No`
+    }).then((result) => {
+
+    if (result.isConfirmed) {
+      removeModel(app, view, id).then((ev) => ev.json()).then((data) => {
+        Swal.fire(data.msg, "", "success");
+        setTimeout(function() {
+          window.location.href = '/view/'+getFullURI(app,view,null)+"/list";
+        },800);
+      });
+    }
+  });
+}
+
 export {
    toCapital,
    FormField,
@@ -379,6 +434,8 @@ export {
    ValidateData,
    getFormData,
    openModal,
+   DefaultBtnSave,
+   DefaultBtnDelete,
    last_component,
    last_component_params
 }

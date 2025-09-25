@@ -78,11 +78,11 @@ import {onMounted, ref} from "vue";
 import { useRoute, useRouter } from 'vue-router'
 import {
   getForm,
-  HttpRequest,
   removeModel,
   addModel,
   getModelData,
-  getFullURI, getFormData, ValidateData
+  DefaultBtnSave,
+  DefaultBtnDelete
 } from "../utils";
 import GenericView from "../components/GenericView.vue";
 import ListButton from "../components/buttons/ListButton.vue";
@@ -92,8 +92,9 @@ import Actions from "../components/buttons/Actions.vue";
 import Swal from "sweetalert2";
 import GenericForm from "../components/GenericForm.vue";
 
-const name  = ref("");
-const items = ref({});
+const module_name = ref("Group");
+const name        = ref("");
+const items       = ref({});
 
 const router = useRouter();
 const route  = useRoute();
@@ -161,38 +162,12 @@ const removePermission = (item) => {
 
 }
 
-const btnSave = () => {
-
-  let is_valid = ValidateData(items.value);
-  let data     = getFormData(items.value);
-  let full_uri = getFullURI(route.params.app,"Group",route.params.id);
-
-  if (is_valid) {
-
-    HttpRequest("POST",full_uri,data)
-        .then((data_json) => data_json.json())
-        .then((data) => {
-          router.replace({ name: 'list_group', params: { app: route.params.app,view:route.params.view } });
-        });
-  }
+const btnSave = (ev,extra) => {
+  DefaultBtnSave(extra,route.params.app,module_name.value,items,route.params.id);
 }
 
 const btnDelete = () => {
-    Swal.fire({
-      title: "¿Realmente desea eliminar este elemento?",
-      showDenyButton: true,
-      confirmButtonText: "Si",
-      denyButtonText: `No`
-    }).then((result) => {
-
-    if (result.isConfirmed) {
-      removeModel("base", "Group", route.params.id).then((ev) => ev.json()).then((data) => {
-        Swal.fire(data.msg, "", "success").then(() => {
-          router.replace({ name: 'list_group', params: { app: route.params.app,view:route.params.view } });
-        });
-      });
-    }
-  });
+  DefaultBtnDelete(route.params.app,module_name.value,route.params.id);
 }
 
 </script>

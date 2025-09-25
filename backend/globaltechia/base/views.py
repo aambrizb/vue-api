@@ -192,6 +192,7 @@ async def ViewUser(request,pk=None):
     "msg"          : msg,
     "form"         : _form,
     "obj"          : obj,
+    "id"           : obj.id if obj else None,
     "verbose_name" : User.Meta.verbose_name if User.Meta.verbose_name else 'User',
   }
 

@@ -34,3 +34,4 @@ coverage
 build/be-globaltechia/dist/*
 build/be-globaltechia/be_globaltechia.egg-info/*
 build/be-globaltechia/globaltechia
+builds/*
