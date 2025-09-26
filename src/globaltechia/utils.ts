@@ -394,22 +394,37 @@ const DefaultBtnSave = (type:string,app:string,view:string,items:any,id?:number|
   }
 }
 
-const DefaultBtnDelete = (app:string,view:string,id:number) => {
+const DefaultBtnDelete = (app:string,view:string,id:number,title?:string|null): Promise<{ app: string; view: string; id: number; msg: string }> => {
+
+  return new Promise((resolve, reject) => {
+    let final_title = title ?? "¿Realmente desea eliminar este elemento?";
+
     Swal.fire({
-      title: "¿Realmente desea eliminar este elemento?",
+      title: final_title,
       showDenyButton: true,
       confirmButtonText: "Si",
       denyButtonText: `No`
     }).then((result) => {
 
-    if (result.isConfirmed) {
-      removeModel(app, view, id).then((ev) => ev.json()).then((data) => {
-        Swal.fire(data.msg, "", "success");
-        setTimeout(function() {
-          window.location.href = '/view/'+getFullURI(app,view,null)+"/list";
-        },800);
-      });
-    }
+      if (result.isConfirmed) {
+        removeModel(app, view, id).then((ev) => ev.json()).then((data) => {
+          Swal.fire(data.msg, "", "success");
+
+          const event = new CustomEvent("RemoveModel", {
+            detail: {
+              app: app,
+              view: view,
+              id: id
+            },
+          });
+
+          document.dispatchEvent(event);
+
+          resolve({ app, view, id, msg: data.msg });
+
+        }).catch(reject);
+      }
+    });
   });
 }
 
