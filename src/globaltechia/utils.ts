@@ -359,6 +359,23 @@ function openModal(component:any,params:any = {}) {
   });
 }
 
+const RemoveModal = () => {
+  const modalElement = document.getElementById("frame_modal");
+
+  if (modalElement) {
+    const myModal = Modal.getInstance(modalElement);
+    if (myModal) {
+      myModal.hide();
+      setTimeout(function() {
+          myModal.dispose();
+          last_component.value = null;
+          last_component_params.value = null;
+          document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        },200);
+    }
+  }
+}
+
 const DefaultBtnSave = (type:string,app:string,view:string,items:any,id?:number|null) => {
 
   let is_valid = ValidateData(items.value);
@@ -449,6 +466,7 @@ export {
    ValidateData,
    getFormData,
    openModal,
+   RemoveModal,
    DefaultBtnSave,
    DefaultBtnDelete,
    last_component,
