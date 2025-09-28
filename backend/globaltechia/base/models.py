@@ -8,7 +8,7 @@ class Navbar(utils.FrameModel):
   app        = utils.CharField(max_length=60,null=True)
   view       = utils.CharField(max_length=60,null=True)
   icon_class = utils.CharField(max_length=160,null=True)
-  order      = utils.IntField(default=0)
+  order      = utils.IntegerField(default=0)
   parent:      fields.ForeignKeyRelation["Navbar"] = utils.ForeignKeyField(
     'models.Navbar',
     null=True,

@@ -207,7 +207,10 @@ class FrameField:
 class CharField(FrameField,fields.CharField):
   type = 'text'
 
-class IntField(FrameField,fields.IntField):
+class TextField(FrameField,fields.TextField):
+  type = 'textarea'
+
+class IntegerField(FrameField,fields.IntField):
   type = 'text'
 
 class DateField(FrameField,fields.DateField):
@@ -256,7 +259,7 @@ def ForeignKeyField(model_name, **kwargs):
 
 class FrameModel(Model):
 
-  id = IntField(pk=True,show=False)
+  id = IntegerField(pk=True,show=False)
 
   class Meta:
     verbose_name = None

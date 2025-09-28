@@ -91,8 +91,12 @@ class TextField extends FormField {
  type = 'text'
 }
 
-class TextAreaField extends FormField {
-  type = 'textarea'
+class IntegerField extends FormField {
+ type = 'text'
+}
+
+class FloatField extends FormField {
+ type = 'text'
 }
 
 class DateField extends FormField {
@@ -228,6 +232,23 @@ function logout() {
   localStorage.removeItem('token');
   window.location.href = '';
 }
+
+class VerifyPromise<T> extends Promise<T> {
+  private onThenCalled = false;
+
+  then<TResult1 = T, TResult2 = never>(
+    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
+    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+  ): Promise<TResult1 | TResult2> {
+    this.onThenCalled = true;
+    return super.then(onfulfilled, onrejected);
+  }
+
+  get consumed() {
+    return this.onThenCalled;
+  }
+}
+
 async function HttpRequest(method:string,uri:string,payload:any) {
   const url    = window.END_POINT+"/"+uri
   const _token = localStorage.getItem('token');
@@ -375,21 +396,22 @@ const RemoveModal = () => {
     }
   }
 }
-
-const DefaultBtnSave = (type:string,app:string,view:string,items:any,id?:number|null) => {
+const DefaultBtnSave = (type:string,app:string,view:string,items:any,id?:number|null): VerifyPromise<any> | void => {
 
   let is_valid = ValidateData(items.value);
   let data     = getFormData(items.value);
   let full_uri = getFullURI(app,view,id ? id:null);
 
-  if (is_valid) {
+  if (!is_valid) return;
 
+  const promise = new VerifyPromise<any>((resolve, reject) => {
     HttpRequest("POST",full_uri,data)
-        .then((data_json) => data_json.json())
-        .then((data) => {
-          Swal.fire('Operación realizada con éxito', "", "success");
-          setTimeout(function() {
+      .then((data_json) => data_json.json())
+      .then((data) => {
+        Swal.fire('Operación realizada con éxito', "", "success");
+        setTimeout(function() {
 
+          if (!promise.consumed) {
             let base_url = '/view/'+getFullURI(app,view,null);
 
             if (type === 'SAVE_EDIT' && (data.id == null || data.id == undefined)) {
@@ -405,11 +427,17 @@ const DefaultBtnSave = (type:string,app:string,view:string,items:any,id?:number|
             else if (type == 'SAVE_LIST') {
               window.location.href = base_url+"/list";
             }
+          }
 
-          },800);
-        });
-  }
-}
+          resolve(data);
+
+        },800);
+      }).catch(reject);
+    });
+
+  return promise;
+
+};
 
 const DefaultBtnDelete = (app:string,view:string,id:number,title?:string|null): Promise<{ app: string; view: string; id: number; msg: string }> => {
 
@@ -449,9 +477,10 @@ export {
    toCapital,
    FormField,
    CharField,
+   IntegerField,
+   FloatField,
    PasswordField,
    TextField,
-   TextAreaField,
    DateField,
    DateTimeField,
    SelectField,
