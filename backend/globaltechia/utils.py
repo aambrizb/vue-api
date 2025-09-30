@@ -182,7 +182,8 @@ class FrameField:
     if not self.label:
       self.label = self.name.capitalize()
 
-    self.choices = choices
+    if choices:
+      self.choices = choices
 
     _tmp = {
       "type"         : self.type,
