@@ -473,6 +473,11 @@ const DefaultBtnDelete = (app:string,view:string,id:number,title?:string|null): 
   });
 }
 
+const FormatMoney = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 export {
    toCapital,
    FormField,
@@ -498,6 +503,7 @@ export {
    RemoveModal,
    DefaultBtnSave,
    DefaultBtnDelete,
+   FormatMoney,
    last_component,
    last_component_params
 }
