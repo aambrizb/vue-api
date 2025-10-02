@@ -35,7 +35,7 @@
               {{ x[y.name] }}
             </a>
             <span v-if="y.name !== 'id' && !y.boolean">
-              {{ x[y.name] }}
+              <div v-html="x[y.name]"></div>
             </span>
             <span v-if="y.name !== 'id' && y.boolean">
               <span class="fa" :class="x[y.name] ? 'fa-check-circle text-success':'fa-times-circle text-danger' "></span>

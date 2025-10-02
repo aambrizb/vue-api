@@ -102,8 +102,10 @@ async def get_list(app,view,request: Request):
           kw_search[f"{x}__icontains"] = _search
 
       _list_display = getattr(_model.Admin, 'list_display',[])
+      _list_hidden  = getattr(_model.Admin, 'list_hidden', [])
+      _list_total   = _list_display+_list_hidden
       _methods      = [m for m in dir(_model.Admin) if callable(getattr(_model.Admin, m)) and not m.startswith("__")]
-      _values       = list(set(_list_display) - set(_methods))
+      _values       = list(set(_list_total) - set(_methods))
 
       data         = await _model.filter(**kw_search).order_by('-id').values(*_values)
 

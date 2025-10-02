@@ -351,3 +351,7 @@ async def hasPermission(token,permission):
     return True
 
   return False
+
+class dictToObj:
+  def __init__(self, d):
+    self.__dict__.update(d)
