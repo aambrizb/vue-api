@@ -7,6 +7,7 @@
     <div :class="item.input_class">
       <div v-if="item.type == 'text' || item.type == 'password' || item.type == 'date' || item.type == 'datetime-local'">
         <input
+            :id="'id_'+item.name"
             :type="item.type"
             :class="getInputClass(item)"
             v-model="item.value"
@@ -19,6 +20,7 @@
       <div v-if="item.type == 'checkbox'">
         <input
             type="checkbox"
+            :id="'id_'+item.name"
             :class="getInputClass(item)"
             v-model="item.value"
             :disabled="item.disabled"
@@ -30,6 +32,7 @@
       </div>
       <div v-if="item.type == 'select'">
         <select
+            :id="'id_'+item.name"
             :class="getInputClass(item)"
             v-model="item.value"
             :disabled="item.disabled"
@@ -40,6 +43,7 @@
       </div>
       <div v-if="item.type == 'textarea'">
         <textarea
+            :id="'id_'+item.name"
             :class="getInputClass(item)"
             v-model="item.value"
             :disabled="item.disabled"
