@@ -101,7 +101,16 @@ async def get_list(app,view,request: Request):
         for x in _model.Admin.search_field:
           kw_search[f"{x}__icontains"] = _search
 
-      data         = await _model.filter(**kw_search).order_by('-id').values()
+      _list_display = getattr(_model.Admin, 'list_display',[])
+      _methods      = [m for m in dir(_model.Admin) if callable(getattr(_model.Admin, m)) and not m.startswith("__")]
+      _values       = list(set(_list_display) - set(_methods))
+
+      data         = await _model.filter(**kw_search).order_by('-id').values(*_values)
+
+      # Add Custom Data
+      for item_data,item_method in zip(data,_methods):
+        _el = utils.dictToObj(item_data)
+        item_data[item_method] = getattr(_model.Admin, item_method)(_el)
 
       if hasattr(_model,'Admin'):
 
@@ -123,7 +132,7 @@ async def get_list(app,view,request: Request):
         if type(_model.Admin.list_display) == list and len(_model.Admin.list_display) > 0:
 
           for y in _model.Admin.list_display:
-            _final_headers[y] = _base_headers[y]
+            _final_headers[y] = _base_headers[y] if y in _base_headers else None
       else:
         _final_headers = _base_headers
 
@@ -138,6 +147,12 @@ async def get_list(app,view,request: Request):
             'boolean' : isinstance(_final_headers[x],utils.BooleanField)
           }
           _headers.append(_tmp)
+        else:
+          _headers.append({
+            'name'    : x,
+            'label'   : x,
+            'boolean' : False
+          })
 
       return {
         "verbose_name" : _model.Meta.verbose_name if _model.Meta.verbose_name else view,
