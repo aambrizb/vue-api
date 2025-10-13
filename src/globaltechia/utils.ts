@@ -18,6 +18,10 @@ import Swal from "sweetalert2";
 const last_component        = ref(null)
 const last_component_params = ref(null);
 
+const last_print        = ref(null)
+const last_print_params = ref(null);
+
+
 function toCapital(item:string|undefined|null) {
 
   let words       = ""
@@ -473,6 +477,42 @@ const DefaultBtnDelete = (app:string,view:string,id:number,title?:string|null): 
   });
 }
 
+const PrintFormat = (component:any,params:any = {}) => {
+
+  last_print.value = markRaw(component);
+  last_print_params.value = params;
+
+  setTimeout(function() {
+
+    let content = document.getElementById('printable_area')?.innerHTML;
+
+    const printWindow = window.open('', '', 'width=800,height=600');
+    if (printWindow) {
+      printWindow.document.write(`
+         <html>
+           <head>
+             <link
+               href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+               rel="stylesheet"
+             >
+            </head>
+           <body>
+             ${content}
+           </body>
+         </html>
+       `);
+
+      printWindow.document.close();
+
+      printWindow.onload = function() {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      };
+    }
+  },100);
+}
+
 const FormatMoney = new Intl.NumberFormat('es-MX', {
   style: 'currency',
   currency: 'MXN',
@@ -503,7 +543,10 @@ export {
    RemoveModal,
    DefaultBtnSave,
    DefaultBtnDelete,
+   PrintFormat,
    FormatMoney,
    last_component,
-   last_component_params
+   last_component_params,
+   last_print,
+   last_print_params
 }
