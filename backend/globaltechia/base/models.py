@@ -22,6 +22,8 @@ class Navbar(utils.FrameModel):
   class Meta:
     verbose_name = 'Menu'
 
+  class Admin:
+    list_display = ['id','name','app','view','icon_class','permission','list','active']
   def __str__(self):
     return self.name
 
@@ -31,6 +33,9 @@ class Permission(utils.FrameModel):
 
   class Meta:
     verbose_name = 'Permiso'
+
+  class Admin:
+    list_display = ['id','active']
 
 class FrameAdmin:
   list_display = []
@@ -42,9 +47,8 @@ class Group(utils.FrameModel):
 
   class Meta:
     verbose_name = 'Grupo'
-  #class Admin(FrameAdmin):
-  #  list_display = ['name','active']
-  #  search_field = ['name']
+  class Admin(FrameAdmin):
+    list_display = ['name','active']
 
   def __str__(self):
     return self.name
@@ -130,6 +134,8 @@ class ApiToken(utils.FrameModel):
   def __str__(self):
     return self.name
 
+  class Admin:
+    list_display = ['id','name','active']
   async def save(self, *args, **kwargs):
     import uuid
 
