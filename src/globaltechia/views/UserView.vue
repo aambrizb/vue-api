@@ -137,7 +137,7 @@ import {
   addModel,
   getModelData,
   DefaultBtnSave,
-  DefaultBtnDelete
+  DefaultBtnDelete, ValidateData, getFormData
 } from "../utils";
 import GenericItem from "../components/GenericItem.vue";
 import GenericView from "../components/GenericView.vue";
@@ -282,7 +282,13 @@ const removePermission = (item) => {
 }
 
 const btnSave = (ev,extra) => {
-  DefaultBtnSave(extra,route.params.app,module_name.value,items,route.params.id);
+
+  let is_valid = ValidateData(items.value);
+  let data     = getFormData(items.value);
+
+  if (!is_valid) return;
+
+  DefaultBtnSave(extra,route.params.app,module_name.value,data,route.params.id);
 }
 
 const btnDelete = () => {

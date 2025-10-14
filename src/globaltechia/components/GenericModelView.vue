@@ -29,7 +29,7 @@ import {watch, ref, onMounted} from "vue";
 import GenericView from "./GenericView.vue";
 import VueForm from "./GenericForm.vue";
 import {useRoute, useRouter} from 'vue-router'
-import {getForm, toCapital, DefaultBtnSave, DefaultBtnDelete} from "../utils";
+import {getForm, toCapital, DefaultBtnSave, DefaultBtnDelete, ValidateData, getFormData} from "../utils";
 import Actions from "./buttons/Actions.vue";
 import ListButton from "./buttons/ListButton.vue";
 
@@ -60,7 +60,15 @@ const loadForm = () => {
 };
 
 const btnSave = (ev,extra) => {
-  DefaultBtnSave(extra,route.params.app,route.params.view,items,route.params.id);
+  
+  let is_valid = ValidateData(items.value);
+  let data     = getFormData(items.value);
+
+  if (!is_valid) return;
+
+
+  DefaultBtnSave(extra,route.params.app,route.params.view,data,route.params.id);
+
 };
 
 const btnDelete = () => {

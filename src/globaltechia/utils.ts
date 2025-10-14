@@ -400,13 +400,9 @@ const RemoveModal = () => {
     }
   }
 }
-const DefaultBtnSave = (type:string,app:string,view:string,items:any,id?:number|null): VerifyPromise<any> | void => {
+const DefaultBtnSave = (type:string,app:string,view:string,data?:Record<string,any>|null,id?:number|null): VerifyPromise<any> | void => {
 
-  let is_valid = ValidateData(items.value);
-  let data     = getFormData(items.value);
   let full_uri = getFullURI(app,view,id ? id:null);
-
-  if (!is_valid) return;
 
   const promise = new VerifyPromise<any>((resolve, reject) => {
     HttpRequest("POST",full_uri,data)
