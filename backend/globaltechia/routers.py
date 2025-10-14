@@ -101,7 +101,9 @@ async def get_list(app,view,request: Request):
         and hasattr(_model.Admin,'search_field') \
         and len(_model.Admin.search_field) > 0:
         for x in _model.Admin.search_field:
-          _query |= Q(**{f"{x}__icontains": _search})
+          _x_split = x.split(" ")
+          for z in _x_split:
+            _query |= Q(**{f"{x}__icontains": z})
 
       _list_display = getattr(_model.Admin, 'list_display',[])
       _list_hidden  = getattr(_model.Admin, 'list_hidden', [])
