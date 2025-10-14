@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 from globaltechia import utils
+from tortoise.expressions import Q
 import importlib
 import os
 import traceback
@@ -94,12 +95,13 @@ async def get_list(app,view,request: Request):
 
     if _model:
 
-      kw_search = {}
+      _query    = Q()
+
       if _search and hasattr(_model,'Admin') \
         and hasattr(_model.Admin,'search_field') \
         and len(_model.Admin.search_field) > 0:
         for x in _model.Admin.search_field:
-          kw_search[f"{x}__icontains"] = _search
+          _query |= Q(**{f"{x}__icontains": _search})
 
       _list_display = getattr(_model.Admin, 'list_display',[])
       _list_hidden  = getattr(_model.Admin, 'list_hidden', [])
@@ -107,7 +109,7 @@ async def get_list(app,view,request: Request):
       _methods      = [m for m in dir(_model.Admin) if callable(getattr(_model.Admin, m)) and not m.startswith("__")]
       _values       = list(set(_list_total) - set(_methods))
 
-      data         = await _model.filter(**kw_search).order_by('-id').values(*_values)
+      data         = await _model.filter(_query).order_by('-id').values(*_values)
 
       # Add Custom Data
       for item_data,item_method in zip(data,_methods):
