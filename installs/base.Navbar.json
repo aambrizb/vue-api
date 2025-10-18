@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "name": "Administraci\u00f3n",
+    "to": null,
+    "app": null,
+    "view": null,
+    "icon_class": null,
+    "order": 0,
+    "permission": null,
+    "list": false,
+    "active": true,
+    "parent_id": null
+  },
+  {
+    "id": 2,
+    "name": "Permisos",
+    "to": "create",
+    "app": "base",
+    "view": "Permission",
+    "icon_class": "fa-solid fa-wand-sparkles",
+    "order": 1,
+    "permission": null,
+    "list": true,
+    "active": true,
+    "parent_id": 1
+  },
+  {
+    "id": 3,
+    "name": "Grupos",
+    "to": "create",
+    "app": "base",
+    "view": "Group",
+    "icon_class": "fa-solid fa-people-group",
+    "order": 2,
+    "permission": null,
+    "list": true,
+    "active": true,
+    "parent_id": 1
+  },
+  {
+    "id": 4,
+    "name": "Usuarios",
+    "to": "create_user",
+    "app": "base",
+    "view": "User",
+    "icon_class": "fa-solid fa-users",
+    "order": 3,
+    "permission": null,
+    "list": true,
+    "active": true,
+    "parent_id": 1
+  },
+  {
+    "id": 5,
+    "name": "Menu",
+    "to": "create",
+    "app": "base",
+    "view": "Navbar",
+    "icon_class": "fa-solid fa-bars",
+    "order": 4,
+    "permission": null,
+    "list": true,
+    "active": true,
+    "parent_id": 1
+  },
+  {
+    "id": 6,
+    "name": "API Token",
+    "to": "create",
+    "app": "base",
+    "view": "ApiToken",
+    "icon_class": "fa-solid fa-square-binary",
+    "order": 1,
+    "permission": null,
+    "list": true,
+    "active": true,
+    "parent_id": 1
+  }
+]

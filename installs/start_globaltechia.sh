@@ -26,6 +26,10 @@ cd ..
 # Prepare Backend
 mkdir backend
 cd backend
+mkdir app
+mkdir app/data
+curl -L -o app/base.Navbar.json https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/base.Navbar.json
+
 curl -L -o main.py https://github.com/aambrizb/vue-api/raw/refs/heads/main/backend/main.py
 curl -L -o manage.py https://github.com/aambrizb/vue-api/raw/refs/heads/main/backend/manage.py
 echo '../installs/be_globaltechia-0.1.0.tar.gz' > requirements.txt
