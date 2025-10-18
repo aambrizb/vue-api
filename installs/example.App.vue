@@ -1,13 +1,9 @@
-<template>
-$END$
-</template>
-
-<script>
-export default {
-name: "example.App.vue"
-}
+<script setup lang="ts">
 </script>
 
-<style scoped>
+<template>
+  <router-view />
+</template>
 
+<style scoped>
 </style>
