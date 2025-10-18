@@ -48,5 +48,5 @@ npm install ../installs/globaltechia-1.0.0.tgz --save
 rm -rf src/main.js
 curl -L -o src/main.js https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.main.js
 
-rm -rf src/router/index.ts
-curl -L -o src/router/index.ts https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.default_router.ts
+rm -rf src/router/index.js
+curl -L -o src/router/index.js https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.default_router.js
