@@ -133,11 +133,11 @@ import { useRoute, useRouter } from 'vue-router'
 import {
   PasswordField,
   getForm,
-  HttpRequest,
   removeModel,
   addModel,
   getModelData,
-  getFullURI, getFormData, ValidateData
+  DefaultBtnSave,
+  DefaultBtnDelete, ValidateData, getFormData
 } from "../utils";
 import GenericItem from "../components/GenericItem.vue";
 import GenericView from "../components/GenericView.vue";
@@ -147,8 +147,9 @@ import SelectModel from "../components/SelectModel.vue";
 import Actions from "../components/buttons/Actions.vue";
 import Swal from "sweetalert2";
 
-const name  = ref("");
-const items = ref({});
+const module_name = ref('User');
+const name        = ref("");
+const items       = ref({});
 
 const router = useRouter();
 const route  = useRoute();
@@ -280,38 +281,18 @@ const removePermission = (item) => {
 
 }
 
-const btnSave = () => {
+const btnSave = (ev,extra) => {
 
   let is_valid = ValidateData(items.value);
   let data     = getFormData(items.value);
-  let full_uri = getFullURI(route.params.app,"User",route.params.id);
 
-  if (is_valid) {
+  if (!is_valid) return;
 
-    HttpRequest("POST",full_uri,data)
-        .then((data_json) => data_json.json())
-        .then((data) => {
-          router.replace({ name: 'list_user', params: { app: route.params.app,view:route.params.view } });
-        });
-  }
+  DefaultBtnSave(extra,route.params.app,module_name.value,data,route.params.id);
 }
 
 const btnDelete = () => {
-    Swal.fire({
-      title: "¿Realmente desea eliminar este elemento?",
-      showDenyButton: true,
-      confirmButtonText: "Si",
-      denyButtonText: `No`
-    }).then((result) => {
-
-    if (result.isConfirmed) {
-      removeModel("base", "User", route.params.id).then((ev) => ev.json()).then((data) => {
-        Swal.fire(data.msg, "", "success").then(() => {
-          router.replace({ name: 'list_user', params: { app: route.params.app,view:route.params.view } });
-        });
-      });
-    }
-  });
+  DefaultBtnDelete(route.params.app,module_name.value,route.params.id);
 }
 
 </script>

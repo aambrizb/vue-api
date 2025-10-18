@@ -31,11 +31,11 @@
             <input type="checkbox" v-model="x.selected"/>
           </td>
           <td :class="'td-'+y.name" v-for="y in items.headers">
-            <router-link  v-if="y.name === 'id'" :to="{ name: props.to, params: { 'app':props.app,'view': props.view,'id': x[y.name] }}">
+            <a :href="'/view/'+props.app+'/'+props.view+'/'+x[y.name]" v-if="y.name === 'id'">
               {{ x[y.name] }}
-            </router-link>
+            </a>
             <span v-if="y.name !== 'id' && !y.boolean">
-              {{ x[y.name] }}
+              <div v-html="x[y.name]"></div>
             </span>
             <span v-if="y.name !== 'id' && y.boolean">
               <span class="fa" :class="x[y.name] ? 'fa-check-circle text-success':'fa-times-circle text-danger' "></span>

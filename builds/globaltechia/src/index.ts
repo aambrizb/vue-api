@@ -9,6 +9,7 @@ import GenericView from './components/GenericView.vue';
 import Navbar from './components/Navbar.vue';
 import Notification from './components/Notification.vue';
 import SelectModel from './components/SelectModel.vue';
+import Printable from './components/Printable.vue';
 
 // components/buttons
 import Actions from './components/buttons/Actions.vue';
@@ -26,6 +27,7 @@ import LoginView from './views/LoginView.vue';
 import SystemView from './views/LoginView.vue';
 import UserView from "./views/UserView.vue";
 import UserViewList from "./views/UserViewList.vue";
+import ModelModal from "./views/ModelModal.vue";
 
 export * from "./utils";
 
@@ -40,6 +42,7 @@ export {
   Navbar,
   Notification,
   SelectModel,
+  Printable,
   Actions,
   CreateButton,
   ListButton,
@@ -49,5 +52,6 @@ export {
   LoginView,
   SystemView,
   UserView,
-  UserViewList
+  UserViewList,
+  ModelModal
 };

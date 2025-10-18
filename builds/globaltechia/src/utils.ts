@@ -1,16 +1,26 @@
-import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 import LoginView from "./views/LoginView.vue";
 import SystemView from "./views/SystemView.vue";
 import GenericModelView from "./components/GenericModelView.vue";
 import GenericList from "./components/GenericList.vue";
 import DashboardView from "./views/DashboardView.vue";
 import UserView from "./views/UserView.vue";
-import { Modal } from 'bootstrap';
-import {markRaw, nextTick, ref, Component} from "vue";
 import UserViewList from "./views/UserViewList.vue";
+import GroupView from "./views/GroupView.vue";
+import GroupViewList from "./views/GroupViewList.vue";
+import { Modal } from 'bootstrap';
+import {markRaw, nextTick, ref} from "vue";
+import type { Component } from "vue";
+import Swal from "sweetalert2";
+
 
 const last_component        = ref(null)
 const last_component_params = ref(null);
+
+const last_print        = ref(null)
+const last_print_params = ref(null);
+
 
 function toCapital(item:string|undefined|null) {
 
@@ -85,8 +95,12 @@ class TextField extends FormField {
  type = 'text'
 }
 
-class TextAreaField extends FormField {
-  type = 'textarea'
+class IntegerField extends FormField {
+ type = 'text'
+}
+
+class FloatField extends FormField {
+ type = 'text'
 }
 
 class DateField extends FormField {
@@ -131,19 +145,34 @@ function getRouter(
       component : _dashboardView,
     },
     {
-      path: '/:app/User/list',
+      path: '/view/:app/User/list',
       name: 'list_user',
       component: UserViewList,
     },
     {
-      path: '/:app/User',
+      path: '/view/:app/User',
       name: 'create_user',
       component: UserView,
     },
     {
-      path: '/:app/User/:id',
+      path: '/view/:app/User/:id(\\d+)',
       name: 'edit_user',
       component: UserView,
+    },
+    {
+      path: '/view/:app/Group/list',
+      name: 'list_group',
+      component: GroupViewList,
+    },
+    {
+      path: '/view/:app/Group',
+      name: 'create_group',
+      component: GroupView,
+    },
+    {
+      path: '/view/:app/Group/:id(\\d+)',
+      name: 'edit_group',
+      component: GroupView,
     },
     {
       path      : ':app/:view',
@@ -151,7 +180,7 @@ function getRouter(
       component : GenericModelView,
     },
     {
-      path      : ':app/:view/:id',
+      path      : ':app/:view/:id(\\d+)',
       name      : 'edit',
       component : GenericModelView,
     },
@@ -207,6 +236,23 @@ function logout() {
   localStorage.removeItem('token');
   window.location.href = '';
 }
+
+class VerifyPromise<T> extends Promise<T> {
+  private onThenCalled = false;
+
+  then<TResult1 = T, TResult2 = never>(
+    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
+    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+  ): Promise<TResult1 | TResult2> {
+    this.onThenCalled = true;
+    return super.then(onfulfilled, onrejected);
+  }
+
+  get consumed() {
+    return this.onThenCalled;
+  }
+}
+
 async function HttpRequest(method:string,uri:string,payload:any) {
   const url    = window.END_POINT+"/"+uri
   const _token = localStorage.getItem('token');
@@ -338,13 +384,144 @@ function openModal(component:any,params:any = {}) {
   });
 }
 
+const RemoveModal = () => {
+  const modalElement = document.getElementById("frame_modal");
+
+  if (modalElement) {
+    const myModal = Modal.getInstance(modalElement);
+    if (myModal) {
+      myModal.hide();
+      setTimeout(function() {
+          myModal.dispose();
+          last_component.value = null;
+          last_component_params.value = null;
+          document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        },200);
+    }
+  }
+}
+const DefaultBtnSave = (type:string,app:string,view:string,data?:Record<string,any>|null,id?:number|null): VerifyPromise<any> | void => {
+
+  let full_uri = getFullURI(app,view,id ? id:null);
+
+  const promise = new VerifyPromise<any>((resolve, reject) => {
+    HttpRequest("POST",full_uri,data)
+      .then((data_json) => data_json.json())
+      .then((data) => {
+        Swal.fire('Operación realizada con éxito', "", "success");
+        setTimeout(function() {
+
+          if (!promise.consumed) {
+            let base_url = '/view/'+getFullURI(app,view,null);
+
+            if (type === 'SAVE_EDIT' && (data.id == null || data.id == undefined)) {
+              type = 'SAVE_LIST';
+            }
+
+            if (type === 'SAVE_ANOTHER') {
+              window.location.href = base_url;
+            }
+            else if (type === 'SAVE_EDIT') {
+              window.location.href = base_url+"/"+data.id;
+            }
+            else if (type == 'SAVE_LIST') {
+              window.location.href = base_url+"/list";
+            }
+          }
+
+          resolve(data);
+
+        },800);
+      }).catch(reject);
+    });
+
+  return promise;
+
+};
+
+const DefaultBtnDelete = (app:string,view:string,id:number,title?:string|null): Promise<{ app: string; view: string; id: number; msg: string }> => {
+
+  return new Promise((resolve, reject) => {
+    let final_title = title ?? "¿Realmente desea eliminar este elemento?";
+
+    Swal.fire({
+      title: final_title,
+      showDenyButton: true,
+      confirmButtonText: "Si",
+      denyButtonText: `No`
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+        removeModel(app, view, id).then((ev) => ev.json()).then((data) => {
+          Swal.fire(data.msg, "", "success");
+
+          const event = new CustomEvent("RemoveModel", {
+            detail: {
+              app: app,
+              view: view,
+              id: id
+            },
+          });
+
+          document.dispatchEvent(event);
+
+          resolve({ app, view, id, msg: data.msg });
+
+        }).catch(reject);
+      }
+    });
+  });
+}
+
+const PrintFormat = (component:any,params:any = {}) => {
+
+  last_print.value = markRaw(component);
+  last_print_params.value = params;
+
+  setTimeout(function() {
+
+    let content = document.getElementById('printable_area')?.innerHTML;
+
+    const printWindow = window.open('', '', 'width=800,height=600');
+    if (printWindow) {
+      printWindow.document.write(`
+         <html>
+           <head>
+             <link
+               href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+               rel="stylesheet"
+             >
+            </head>
+           <body>
+             ${content}
+           </body>
+         </html>
+       `);
+
+      printWindow.document.close();
+
+      printWindow.onload = function() {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      };
+    }
+  },100);
+}
+
+const FormatMoney = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 export {
    toCapital,
    FormField,
    CharField,
+   IntegerField,
+   FloatField,
    PasswordField,
    TextField,
-   TextAreaField,
    DateField,
    DateTimeField,
    SelectField,
@@ -359,6 +536,13 @@ export {
    ValidateData,
    getFormData,
    openModal,
+   RemoveModal,
+   DefaultBtnSave,
+   DefaultBtnDelete,
+   PrintFormat,
+   FormatMoney,
    last_component,
-   last_component_params
+   last_component_params,
+   last_print,
+   last_print_params
 }

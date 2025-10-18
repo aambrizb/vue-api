@@ -7,10 +7,7 @@
       <h5 class="text-center text-secondary" v-if="$route.params.id">{{ $route.params.id }}</h5>
     </template>
     <template #top_button>
-      <router-link class="btn btn-sm btn-secondary pull-right" :to="{ name: 'list', params: { 'app':$route.params.app,'view': $route.params.view }}">
-        <span class="fa fa-list"></span>
-        Listar
-      </router-link>
+      <ListButton to="list" :app="$route.params.app" :view="$route.params.view"/>
     </template>
     <template #body>
       <div class="text-center" v-if="loading">
@@ -21,7 +18,7 @@
       <VueForm ref="form" :items="items"/>
     </template>
     <template #footer>
-      <Actions @delete="btnDelete()" @save="btnSave()" :show_delete="$route.params.id ? true:false" />
+      <Actions @delete="btnDelete()" @save="btnSave" :show_delete="$route.params.id ? true:false" />
     </template>
   </GenericView>
 </template>
@@ -32,9 +29,9 @@ import {watch, ref, onMounted} from "vue";
 import GenericView from "./GenericView.vue";
 import VueForm from "./GenericForm.vue";
 import {useRoute, useRouter} from 'vue-router'
-import {getForm, getFullURI, HttpRequest, removeModel, toCapital} from "../utils";
+import {getForm, toCapital, DefaultBtnSave, DefaultBtnDelete, ValidateData, getFormData} from "../utils";
 import Actions from "./buttons/Actions.vue";
-import Swal from "sweetalert2";
+import ListButton from "./buttons/ListButton.vue";
 
 const route   = useRoute();
 const router  = useRouter()
@@ -62,43 +59,20 @@ const loadForm = () => {
   });
 };
 
-const btnSave = () => {
-  let is_valid = form.value?.is_valid();
-  let data = form.value?.data();
-  let full_uri = getFullURI(route.params.app,route.params.view,route.params.id);
+const btnSave = (ev,extra) => {
+  
+  let is_valid = ValidateData(items.value);
+  let data     = getFormData(items.value);
 
-  if (is_valid) {
+  if (!is_valid) return;
 
-    HttpRequest("POST",full_uri,data)
-        .then((data_json) => data_json.json())
-        .then((data) => {
-          Swal.fire("Operación realizada con éxito", "", "success");
-          setTimeout(function() {
-            router.replace({ name: 'list', params: { app: route.params.app,view:route.params.view } });
-          },800);
 
-        });
-
-  }
+  DefaultBtnSave(extra,route.params.app,route.params.view,data,route.params.id);
 
 };
 
 const btnDelete = () => {
-  Swal.fire({
-      title: "¿Realmente desea eliminar este elemento?",
-      showDenyButton: true,
-      confirmButtonText: "Si",
-      denyButtonText: `No`
-    }).then((result) => {
-
-      if (result.isConfirmed) {
-        removeModel(route.params.app, route.params.view, route.params.id).then((ev) => ev.json()).then((data) => {
-          Swal.fire(data.msg, "", "success").then(() => {
-            router.replace({ name: 'list', params: { app: route.params.app,view:route.params.view } });
-          });
-        });
-      }
-  });
+  DefaultBtnDelete(route.params.app,route.params.view,route.params.id);
 }
 
 </script>
