@@ -41,6 +41,8 @@ npm create vue@latest frontend -- --router
 cd frontend
 npm install
 npm install bootstrap --save
+npm i --save-dev @types/bootstrap
+npm install sweetalert2 --saved
 npm install @fortawesome/fontawesome-free --save
 npm install ../installs/globaltechia-1.0.0.tgz --save
 
