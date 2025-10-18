@@ -40,4 +40,10 @@ cd ..
 npm create vue@latest frontend -- --router
 cd frontend
 npm install
+npm install bootstrap --save
+npm install @fortawesome/fontawesome-free --save
 npm install ../installs/globaltechia-1.0.0.tgz --save
+
+# Change Vue Files to GlobalTechia Files
+rm -rf src/main.ts
+curl -L -o src/main.ts https://github.com/aambrizb/vue-api/raw/refs/heads/main/backend/manage.py
