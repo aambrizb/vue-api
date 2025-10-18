@@ -46,4 +46,7 @@ npm install ../installs/globaltechia-1.0.0.tgz --save
 
 # Change Vue Files to GlobalTechia Files
 rm -rf src/main.ts
-curl -L -o src/main.ts https://github.com/aambrizb/vue-api/raw/refs/heads/main/backend/manage.py
+curl -L -o src/main.ts https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.main.ts
+
+rm -rf src/router/index.ts
+curl -L -o src/router/index.ts https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.default_router.ts
