@@ -5,6 +5,17 @@
 | Author | Jesús Alejandro Ambríz Bedolla |
 | Rev    | Sep/2025                       |
 
+# How to Use (once uniquely)
+
+```
+curl -L -o start_globaltechia.sh https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/start_globaltechia.sh && chmod +x start_globaltechia.sh && sudo mv start_globaltechia.sh /usr/local/bin/start_globaltechia
+```
+
+# After that, for create new project.
+```
+start_globaltechia project_test
+```
+
 # Summary
 
 This project is created with the objective that combine vue + fastapi.
