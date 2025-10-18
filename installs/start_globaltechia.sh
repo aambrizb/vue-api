@@ -45,6 +45,9 @@ npm install @fortawesome/fontawesome-free --save
 npm install ../installs/globaltechia-1.0.0.tgz --save
 
 # Change Vue Files to GlobalTechia Files
+rm -rf src/App.vue
+curl -L -o src/App.vue https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.App.vue
+
 rm -rf src/main.js
 curl -L -o src/main.js https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.main.js
 
