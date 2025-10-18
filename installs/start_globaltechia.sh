@@ -55,3 +55,5 @@ curl -L -o src/main.js https://github.com/aambrizb/vue-api/raw/refs/heads/main/i
 
 rm -rf src/router/index.js
 curl -L -o src/router/index.js https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.default_router.js
+
+curl -L -o src/assets/main.css https://github.com/aambrizb/vue-api/raw/refs/heads/main/installs/example.main.css
