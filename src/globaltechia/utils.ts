@@ -253,20 +253,26 @@ class VerifyPromise<T> extends Promise<T> {
   }
 }
 
-async function HttpRequest(method:string,uri:string,payload:any) {
+async function HttpRequest(method:string,uri:string,payload:any,isFile:boolean=false) {
   const url    = window.END_POINT+"/"+uri
   const _token = localStorage.getItem('token');
 
   let _opts: RequestInit = {
     method  : method,
     headers : {
-      "Content-Type":"application/json",
       "Authorization":"Bearer "+_token
     }
   }
 
   if (payload !== undefined && payload !== null) {
-    _opts['body']                    = JSON.stringify(payload);
+    if (isFile) {
+      _opts.body = payload
+    }
+    else {
+      _opts.headers["Content-Type"] = "application/json";
+      _opts.body                    = JSON.stringify(payload);
+    }
+
   }
 
   const _fetch = await fetch(url,_opts);

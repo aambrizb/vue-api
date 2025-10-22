@@ -217,7 +217,7 @@ class IntegerField(FrameField,fields.IntField):
 class DateField(FrameField,fields.DateField):
   type  = 'date'
 
-class DatetimeField(FrameField,fields.DatetimeField):
+class DateTimeField(FrameField,fields.DatetimeField):
   type  = 'datetime-local'
 
 class BooleanField(FrameField,fields.BooleanField):

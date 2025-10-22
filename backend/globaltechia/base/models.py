@@ -75,7 +75,7 @@ class User(utils.FrameModel):
   email       = utils.CharField(max_length=120,label_class='col-lg-3 col-md-3 col-xs-12',input_class='col-lg-7 col-md-7 col-xs-12')
   password    = utils.CharField(max_length=220,show=False)
   token       = utils.CharField(max_length=220,null=True,show=False)
-  last_login  = utils.DatetimeField(show=False,null=True)
+  last_login  = utils.DateTimeField(show=False,null=True)
   superuser   = utils.BooleanField(default=False,label='Super-Usuario')
   active      = utils.BooleanField(default=True,label="Activo")
 
