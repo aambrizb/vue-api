@@ -358,8 +358,8 @@ class dictToObj:
 
 async def SaveFile(file,full_path,name=None):
   os.makedirs(full_path, exist_ok=True)
-  save_path = os.path.join(full_path, _file.filename if not name else name)
+  save_path = os.path.join(full_path, file.filename if not name else name)
 
   async with aiofiles.open(save_path, "wb") as f:
-    while chunk := await _file.read(1024 * 1024):  # 1 MB chunks
+    while chunk := await file.read(1024 * 1024):  # 1 MB chunks
       f.write(chunk)
