@@ -6,6 +6,7 @@ from argon2 import PasswordHasher, Type
 from functools import wraps
 import math
 import importlib
+import aiofiles
 import os
 
 PACKAGE_NAME = 'globaltechia'
