@@ -9,7 +9,8 @@
     "order": 0,
     "permission": null,
     "active": true,
-    "parent_id": null
+    "parent_id": null,
+    "list": true
   },
   {
     "id": 2,
@@ -21,7 +22,8 @@
     "order": 1,
     "permission": null,
     "active": true,
-    "parent_id": 1
+    "parent_id": 1,
+    "list": true
   },
   {
     "id": 3,
@@ -33,7 +35,8 @@
     "order": 2,
     "permission": null,
     "active": true,
-    "parent_id": 1
+    "parent_id": 1,
+    "list": true
   },
   {
     "id": 4,
@@ -45,7 +48,8 @@
     "order": 3,
     "permission": null,
     "active": true,
-    "parent_id": 1
+    "parent_id": 1,
+    "list": true
   },
   {
     "id": 5,
@@ -57,7 +61,8 @@
     "order": 4,
     "permission": null,
     "active": true,
-    "parent_id": 1
+    "parent_id": 1,
+    "list": true
   },
   {
     "id": 6,
@@ -69,6 +74,7 @@
     "order": 1,
     "permission": null,
     "active": true,
-    "parent_id": 1
+    "parent_id": 1,
+    "list": true
   }
 ]
